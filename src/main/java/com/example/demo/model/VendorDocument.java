@@ -8,16 +8,18 @@ public class VendorDocument {
     private long id;
     private Vendor vendor;
     private DocumentType documentType;
+    private String fileUrl;
     private LocalDateTime uploadedAt;
     private LocalDate expiryDate;
     private Boolean isValid;
 
     public VendorDocument(){}
 
-    public VendorDocument(Vendor vendor, DocumentType documentType, LocalDateTime uploadedAt, LocalDate expiryDate,
+    public VendorDocument(Vendor vendor, DocumentType documentType,String fileUrl, LocalDateTime uploadedAt, LocalDate expiryDate,
             Boolean isValid) {
         this.vendor = vendor;
         this.documentType = documentType;
+        this.fileUrl = fileUrl;
         this.uploadedAt = uploadedAt;
         this.expiryDate = expiryDate;
         this.isValid = isValid;
@@ -47,6 +49,14 @@ public class VendorDocument {
         this.documentType = documentType;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public LocalDateTime getUploadedAt() {
         return uploadedAt;
     }
@@ -70,6 +80,8 @@ public class VendorDocument {
     public void setIsValid(Boolean isValid) {
         this.isValid = isValid;
     }
+
+
 
     
     
