@@ -49,12 +49,12 @@ public class VendorDocument {
         this.documentType = documentType;
     }
 
-    public String getEmail() {
-        return email;
+    public String getFileUrl() {
+        return fileUrl;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
     }
 
     public LocalDateTime getUploadedAt() {
