@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "document_types", uniqueConstraints = @UniqueConstraint(columnNames = "typeName"))
+@Table(
+        name = "document_types",
+        uniqueConstraints = @UniqueConstraint(columnNames = "typeName")
+)
 public class DocumentType {
 
     @Id
@@ -26,13 +29,18 @@ public class DocumentType {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
 
     @PrePersist
+    protected void onCreateAndValidate() {
+        this.createdAt = LocalDateTime.now();
+        validateWeight();
+    }
+
     @PreUpdate
+    protected void onUpdateValidate() {
+        validateWeight();
+    }
+
     private void validateWeight() {
         if (weight == null || weight <= 0) {
             throw new IllegalArgumentException("Weight must be greater than 0");
@@ -41,7 +49,8 @@ public class DocumentType {
 
     public DocumentType(){}
 
-    
+
+
     public DocumentType(String typeName, String description, Boolean required, Integer weight,
             LocalDateTime createdAt) {
         this.typeName = typeName;
