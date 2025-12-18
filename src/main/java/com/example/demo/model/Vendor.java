@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -14,22 +15,26 @@ public class Vendor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private long id;
+
     private String vendorName;
     private String email;
     private String phone;
     private String industry;
     private LocalDateTime createdAt;
 
-    public Vendor(){}
+    public Vendor() {}
 
-    public Vendor(String vendorName, String email, String phone, String industry, LocalDateTime createdAt) {
+    public Vendor(String vendorName, String email, String phone, String industry) {
         this.vendorName = vendorName;
         this.email = email;
         this.phone = phone;
         this.industry = industry;
-        this.createdAt = createdAt;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
     }
 
     public long getId() {
@@ -75,15 +80,4 @@ public class Vendor {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-
-    
-
-
-
-    
 }

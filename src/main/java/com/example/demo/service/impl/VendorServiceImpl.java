@@ -4,6 +4,7 @@ import com.example.demo.model.Vendor;
 import com.example.demo.repository.VendorRepository;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.service.VendorService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class VendorServiceImpl implements VendorService {
 
     @Override
     public Vendor createVendor(Vendor vendor) {
-        if (vendorRepository.existsByName(vendor.getVendorName())) {
+        if (vendorRepository.existsByVendorName(vendor.getVendorName())) {
             throw new IllegalArgumentException("Vendor name must be unique");
         }
         return vendorRepository.save(vendor);
