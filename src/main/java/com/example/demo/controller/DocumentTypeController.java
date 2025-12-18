@@ -1,42 +1,39 @@
-// package com.example.demo.controller;
+package com.example.demo.controller;
 
-// import java.util.List;
+import com.example.demo.model.DocumentType;
+import com.example.demo.service.DocumentTypeService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.RequestMapping;
-// import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
-// import com.example.demo.model.DocumentType;
-// import com.example.demo.service.DocumentTypeService;
+@RestController
+@RequestMapping("/api/document-types")
+public class DocumentTypeController {
 
-// import io.swagger.v3.oas.annotations.parameters.RequestBody;
-// import io.swagger.v3.oas.annotations.tags.Tag;
+    private final DocumentTypeService documentTypeService;
 
-// @RestController
-// @RequestMapping("/api/document-types")
-// @Tag(name = "Document Type Controller")
-// public class DocumentTypeController {
+    @Autowired
+    public DocumentTypeController(DocumentTypeService documentTypeService) {
+        this.documentTypeService = documentTypeService;
+    }
 
-//     @Autowired
-//     private DocumentTypeService documentTypeService;
+    @PostMapping
+    public ResponseEntity<DocumentType> createDocumentType(@RequestBody DocumentType type) {
+        DocumentType created = documentTypeService.createDocumentType(type);
+        return ResponseEntity.ok(created);
+    }
 
-//     @PostMapping
-//     public ResponseEntity<DocumentType> createDocumentType(@RequestBody DocumentType type) {
-//         return ResponseEntity.ok(documentTypeService.createDocumentType(type));
-//     }
+    @GetMapping
+    public ResponseEntity<List<DocumentType>> getAllDocumentTypes() {
+        List<DocumentType> types = documentTypeService.getAllDocumentTypes();
+        return ResponseEntity.ok(types);
+    }
 
-//     @GetMapping
-//     public ResponseEntity<List<DocumentType>> getAllDocumentTypes() {
-//         return ResponseEntity.ok(documentTypeService.getAllDocumentTypes());
-//     }
-
-//     @GetMapping("/{id}")
-//     public ResponseEntity<DocumentType> getDocumentType(@PathVariable Long id) {
-//         return ResponseEntity.ok(documentTypeService.getDocumentType(id));
-//     }
-// }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<DocumentType> getDocumentTypeById(@PathVariable Long id) {
+        DocumentType type = documentTypeService.getDocumentType(id);
+        return ResponseEntity.ok(type);
+    }
+}
