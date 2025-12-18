@@ -1,25 +1,30 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.model.Vendor;
-import com.example.demo.repository.VendorRepository;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.service.VendorService;
+import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.Vendor;
+import com.example.demo.repository.VendorRepository;
+import com.example.demo.service.VendorService;
+
+import jakarta.validation.ValidationException;
 
 @Service
 public class VendorServiceImpl implements VendorService {
 
-    @Autowired
-    private VendorRepository vendorRepository;
+    private final VendorRepository vendorRepository;
+
+   
+    public VendorServiceImpl(VendorRepository vendorRepository) {
+        this.vendorRepository = vendorRepository;
+    }
 
     @Override
     public Vendor createVendor(Vendor vendor) {
         if (vendorRepository.existsByVendorName(vendor.getVendorName())) {
-            throw new IllegalArgumentException("Vendor name must be unique");
+            throw new ValidationException("Duplicate vendor name.");
         }
         return vendorRepository.save(vendor);
     }
@@ -27,7 +32,7 @@ public class VendorServiceImpl implements VendorService {
     @Override
     public Vendor getVendor(Long id) {
         return vendorRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Vendor not found with ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Vendor not found"));
     }
 
     @Override
