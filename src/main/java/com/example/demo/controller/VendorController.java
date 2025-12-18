@@ -1,33 +1,33 @@
-package com.example.demo.controller;
+// package com.example.demo.controller;
 
-import com.example.demo.model.Vendor;
-import com.example.demo.service.VendorService;
-import org.springframework.web.bind.annotation.*;
+// import com.example.demo.model.Vendor;
+// import com.example.demo.service.VendorService;
+// import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+// import java.util.List;
 
-@RestController
-@RequestMapping("/api/vendors")
-public class VendorController {
+// @RestController
+// @RequestMapping("/api/vendors")
+// public class VendorController {
 
-    private final VendorService vendorService;
+//     private final VendorService vendorService;
 
-    public VendorController(VendorService vendorService) {
-        this.vendorService = vendorService;
-    }
+//     public VendorController(VendorService vendorService) {
+//         this.vendorService = vendorService;
+//     }
 
-    @PostMapping
-    public Vendor createVendor(@RequestBody Vendor vendor) {
-        return vendorService.createVendor(vendor);
-    }
+//     @PostMapping
+//     public Vendor createVendor(@RequestBody Vendor vendor) {
+//         return vendorService.createVendor(vendor);
+//     }
 
-    @GetMapping
-    public List<Vendor> getAllVendors() {
-        return vendorService.getAllVendors();
-    }
+//     @GetMapping
+//     public List<Vendor> getAllVendors() {
+//         return vendorService.getAllVendors();
+//     }
 
-    @GetMapping("/{id}")
-    public Vendor getVendor(@PathVariable Long id) {
-        return vendorService.getVendor(id);
-    }
-}
+//     @GetMapping("/{id}")
+//     public Vendor getVendor(@PathVariable Long id) {
+//         return vendorService.getVendor(id);
+//     }
+// }

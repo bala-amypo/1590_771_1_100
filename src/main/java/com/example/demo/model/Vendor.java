@@ -1,121 +1,121 @@
-package com.example.demo.model;
+// package com.example.demo.model;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+// import jakarta.persistence.*;
+// import java.time.LocalDateTime;
+// import java.util.HashSet;
+// import java.util.Set;
 
-@Entity
-@Table(name = "vendors")
-public class Vendor {
+// @Entity
+// @Table(name = "vendors")
+// public class Vendor {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+//     @Id
+//     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//     private Long id;
 
-    @Column(unique = true)
-    private String vendorName;
+//     @Column(unique = true)
+//     private String vendorName;
 
-    private String email;
-    private String phone;
-    private String industry;
+//     private String email;
+//     private String phone;
+//     private String industry;
 
-    private LocalDateTime createdAt;
+//     private LocalDateTime createdAt;
 
-    @ManyToMany
-    @JoinTable(
-        name = "vendor_document_types",
-        joinColumns = @JoinColumn(name = "vendor_id"),
-        inverseJoinColumns = @JoinColumn(name = "document_type_id")
-    )
-    private Set<DocumentType> supportedDocumentTypes = new HashSet<>();
+//     @ManyToMany
+//     @JoinTable(
+//         name = "vendor_document_types",
+//         joinColumns = @JoinColumn(name = "vendor_id"),
+//         inverseJoinColumns = @JoinColumn(name = "document_type_id")
+//     )
+//     private Set<DocumentType> supportedDocumentTypes = new HashSet<>();
 
-    public Vendor() {}
-
-
-    @PrePersist
-    void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    public Long getId() { return id; }
-
-    public Vendor(String vendorName, String email, String phone, String industry, LocalDateTime createdAt,
-            Set<DocumentType> supportedDocumentTypes) {
-        this.vendorName = vendorName;
-        this.email = email;
-        this.phone = phone;
-        this.industry = industry;
-        this.createdAt = createdAt;
-        this.supportedDocumentTypes = supportedDocumentTypes;
-    }
+//     public Vendor() {}
 
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+//     @PrePersist
+//     void onCreate() {
+//         this.createdAt = LocalDateTime.now();
+//     }
+
+//     public Long getId() { return id; }
+
+//     public Vendor(String vendorName, String email, String phone, String industry, LocalDateTime createdAt,
+//             Set<DocumentType> supportedDocumentTypes) {
+//         this.vendorName = vendorName;
+//         this.email = email;
+//         this.phone = phone;
+//         this.industry = industry;
+//         this.createdAt = createdAt;
+//         this.supportedDocumentTypes = supportedDocumentTypes;
+//     }
 
 
-    public String getVendorName() {
-        return vendorName;
-    }
+//     public void setId(Long id) {
+//         this.id = id;
+//     }
 
 
-    public void setVendorName(String vendorName) {
-        this.vendorName = vendorName;
-    }
+//     public String getVendorName() {
+//         return vendorName;
+//     }
 
 
-    public String getEmail() {
-        return email;
-    }
+//     public void setVendorName(String vendorName) {
+//         this.vendorName = vendorName;
+//     }
 
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+//     public String getEmail() {
+//         return email;
+//     }
 
 
-    public String getPhone() {
-        return phone;
-    }
+//     public void setEmail(String email) {
+//         this.email = email;
+//     }
 
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+//     public String getPhone() {
+//         return phone;
+//     }
 
 
-    public String getIndustry() {
-        return industry;
-    }
+//     public void setPhone(String phone) {
+//         this.phone = phone;
+//     }
 
 
-    public void setIndustry(String industry) {
-        this.industry = industry;
-    }
+//     public String getIndustry() {
+//         return industry;
+//     }
 
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+//     public void setIndustry(String industry) {
+//         this.industry = industry;
+//     }
 
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
+//     public LocalDateTime getCreatedAt() {
+//         return createdAt;
+//     }
 
 
-    public Set<DocumentType> getSupportedDocumentTypes() {
-        return supportedDocumentTypes;
-    }
+//     public void setCreatedAt(LocalDateTime createdAt) {
+//         this.createdAt = createdAt;
+//     }
 
 
-    public void setSupportedDocumentTypes(Set<DocumentType> supportedDocumentTypes) {
-        this.supportedDocumentTypes = supportedDocumentTypes;
-    }
+//     public Set<DocumentType> getSupportedDocumentTypes() {
+//         return supportedDocumentTypes;
+//     }
 
-    
+
+//     public void setSupportedDocumentTypes(Set<DocumentType> supportedDocumentTypes) {
+//         this.supportedDocumentTypes = supportedDocumentTypes;
+//     }
 
     
-}
+
+    
+// }
