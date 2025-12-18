@@ -1,88 +1,93 @@
-// package com.example.demo.model;
+package com.example.demo.model;
 
-// import java.time.LocalDateTime;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import jakarta.persistence.Table;
+@Entity
+@Table(name = "document_types", uniqueConstraints = @UniqueConstraint(columnNames = "typeName"))
+public class DocumentType {
 
-// @Entity
-// @Table(name = "document_types")
-// public class DocumentType {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, unique = true)
+    private String typeName;
 
-//     private long id;
-//     private String typeName;
-//     private String description;
-//     private Boolean required;
-//     private Integer weight;
-//     private LocalDateTime createdAt;
+    @Column
+    private String description;
 
-//     public DocumentType(){}
+    @Column(nullable = false)
+    private Boolean required;
 
-//     public DocumentType(String typeName, String description, Boolean required, Integer weight,
-//             LocalDateTime createdAt) {
-//         this.typeName = typeName;
-//         this.description = description;
-//         this.required = required;
-//         this.weight = weight;
-//         this.createdAt = createdAt;
-//     }
+    @Column(nullable = false)
+    private Integer weight;
 
-//     public long getId() {
-//         return id;
-//     }
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-//     public void setId(long id) {
-//         this.id = id;
-//     }
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 
-//     public String getTypeName() {
-//         return typeName;
-//     }
+    @PrePersist
+    @PreUpdate
+    private void validateWeight() {
+        if (weight == null || weight <= 0) {
+            throw new IllegalArgumentException("Weight must be greater than 0");
+        }
+    }
 
-//     public void setTypeName(String typeName) {
-//         this.typeName = typeName;
-//     }
-
-//     public String getDescription() {
-//         return description;
-//     }
-
-//     public void setDescription(String description) {
-//         this.description = description;
-//     }
-
-//     public Boolean getRequired() {
-//         return required;
-//     }
-
-//     public void setRequired(Boolean required) {
-//         this.required = required;
-//     }
-
-//     public Integer getWeight() {
-//         return weight;
-//     }
-
-//     public void setWeight(Integer weight) {
-//         this.weight = weight;
-//     }
-
-//     public LocalDateTime getCreatedAt() {
-//         return createdAt;
-//     }
-
-//     public void setCreatedAt(LocalDateTime createdAt) {
-//         this.createdAt = createdAt;
-//     }
+    public DocumentType(){}
 
     
+    public DocumentType(String typeName, String description, Boolean required, Integer weight,
+            LocalDateTime createdAt) {
+        this.typeName = typeName;
+        this.description = description;
+        this.required = required;
+        this.weight = weight;
+        this.createdAt = createdAt;
+    }
 
+    public Long getId() {
+        return id;
+    }
 
-    
-// }
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getRequired() {
+        return required;
+    }
+
+    public void setRequired(Boolean required) {
+        this.required = required;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+}
