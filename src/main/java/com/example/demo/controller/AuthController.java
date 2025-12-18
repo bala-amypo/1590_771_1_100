@@ -27,6 +27,7 @@ public class AuthController<LoginRequest> {
 
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+        // Implement JWT authentication logic here
         return ResponseEntity.ok("JWT token placeholder");
     }
 }
