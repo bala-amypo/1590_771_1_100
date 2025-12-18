@@ -1,90 +1,90 @@
-package com.example.demo.model;
+// package com.example.demo.model;
 
-import java.time.LocalDateTime;
+// import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+// import jakarta.persistence.Entity;
+// import jakarta.persistence.GeneratedValue;
+// import jakarta.persistence.GenerationType;
+// import jakarta.persistence.Id;
+// import jakarta.persistence.Table;
 
-@Entity
-@Table(name = "compliance_rules")
-public class ComplianceRule {
+// @Entity
+// @Table(name = "compliance_rules")
+// public class ComplianceRule {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//     @Id
+//     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-    private long id;
-    private String ruleName;
-    private String ruleDescription;
-    private String matchType;
-    private Double threshold;
-    private LocalDateTime createdAt;
+//     private long id;
+//     private String ruleName;
+//     private String ruleDescription;
+//     private String matchType;
+//     private Double threshold;
+//     private LocalDateTime createdAt;
 
-    public ComplianceRule(){}
+//     public ComplianceRule(){}
 
-    public ComplianceRule(String ruleName, String ruleDescription, String matchType, Double threshold,
-            LocalDateTime createdAt) {
-        this.ruleName = ruleName;
-        this.ruleDescription = ruleDescription;
-        this.matchType = matchType;
-        this.threshold = threshold;
-        this.createdAt = createdAt;
-    }
+//     public ComplianceRule(String ruleName, String ruleDescription, String matchType, Double threshold,
+//             LocalDateTime createdAt) {
+//         this.ruleName = ruleName;
+//         this.ruleDescription = ruleDescription;
+//         this.matchType = matchType;
+//         this.threshold = threshold;
+//         this.createdAt = createdAt;
+//     }
 
-    public long getId() {
-        return id;
-    }
+//     public long getId() {
+//         return id;
+//     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+//     public void setId(long id) {
+//         this.id = id;
+//     }
 
-    public String getRuleName() {
-        return ruleName;
-    }
+//     public String getRuleName() {
+//         return ruleName;
+//     }
 
-    public void setRuleName(String ruleName) {
-        this.ruleName = ruleName;
-    }
+//     public void setRuleName(String ruleName) {
+//         this.ruleName = ruleName;
+//     }
 
-    public String getRuleDescription() {
-        return ruleDescription;
-    }
+//     public String getRuleDescription() {
+//         return ruleDescription;
+//     }
 
-    public void setRuleDescription(String ruleDescription) {
-        this.ruleDescription = ruleDescription;
-    }
+//     public void setRuleDescription(String ruleDescription) {
+//         this.ruleDescription = ruleDescription;
+//     }
 
-    public String getMatchType() {
-        return matchType;
-    }
+//     public String getMatchType() {
+//         return matchType;
+//     }
 
-    public void setMatchType(String matchType) {
-        this.matchType = matchType;
-    }
+//     public void setMatchType(String matchType) {
+//         this.matchType = matchType;
+//     }
 
-    public Double getThreshold() {
-        return threshold;
-    }
+//     public Double getThreshold() {
+//         return threshold;
+//     }
 
-    public void setThreshold(Double threshold) {
-        this.threshold = threshold;
-    }
+//     public void setThreshold(Double threshold) {
+//         this.threshold = threshold;
+//     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
+//     public LocalDateTime getCreatedAt() {
+//         return createdAt;
+//     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    
-
-
-
+//     public void setCreatedAt(LocalDateTime createdAt) {
+//         this.createdAt = createdAt;
+//     }
 
     
-}
+
+
+
+
+    
+// }
