@@ -1,33 +1,41 @@
-// package com.example.demo.controller;
+package com.example.demo.controller;
 
-// import com.example.demo.model.Vendor;
-// import com.example.demo.service.VendorService;
-// import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
-// import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-// @RestController
-// @RequestMapping("/api/vendors")
-// public class VendorController {
+import com.example.demo.model.Vendor;
+import com.example.demo.service.VendorService;
 
-//     private final VendorService vendorService;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
-//     public VendorController(VendorService vendorService) {
-//         this.vendorService = vendorService;
-//     }
+@RestController
+@RequestMapping("/api/vendors")
+@Tag(name = "Vendor Controller")
+public class VendorController {
 
-//     @PostMapping
-//     public Vendor createVendor(@RequestBody Vendor vendor) {
-//         return vendorService.createVendor(vendor);
-//     }
+    @Autowired
+    private VendorService vendorService;
 
-//     @GetMapping
-//     public List<Vendor> getAllVendors() {
-//         return vendorService.getAllVendors();
-//     }
+    @PostMapping
+    public ResponseEntity<Vendor> createVendor(@RequestBody Vendor vendor) {
+        return ResponseEntity.ok(vendorService.createVendor(vendor));
+    }
 
-//     @GetMapping("/{id}")
-//     public Vendor getVendor(@PathVariable Long id) {
-//         return vendorService.getVendor(id);
-//     }
-// }
+    @GetMapping
+    public ResponseEntity<List<Vendor>> getAllVendors() {
+        return ResponseEntity.ok(vendorService.getAllVendors());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Vendor> getVendor(@PathVariable Long id) {
+        return ResponseEntity.ok(vendorService.getVendor(id));
+    }
+}

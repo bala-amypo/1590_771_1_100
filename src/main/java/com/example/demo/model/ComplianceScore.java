@@ -1,75 +1,75 @@
-// package com.example.demo.model;
+package com.example.demo.model;
 
-// import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.Id;
-// import jakarta.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-// @Entity
-// @Table(name = "compliance_scores")
-// public class ComplianceScore {
+@Entity
+@Table(name = "compliance_scores")
+public class ComplianceScore {
 
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 
-//     private long id;
-//     private Vendor vendor;
-//     private Double scoreValue;
-//     private LocalDateTime lastEvaluated;
-//     private String rating;
+    private long id;
+    private Vendor vendor;
+    private Double scoreValue;
+    private LocalDateTime lastEvaluated;
+    private String rating;
 
-//     public ComplianceScore(){}
+    public ComplianceScore(){}
 
-//     public ComplianceScore(Vendor vendor, Double scoreValue, LocalDateTime lastEvaluated, String rating) {
-//         this.vendor = vendor;
-//         this.scoreValue = scoreValue;
-//         this.lastEvaluated = lastEvaluated;
-//         this.rating = rating;
-//     }
+    public ComplianceScore(Vendor vendor, Double scoreValue, LocalDateTime lastEvaluated, String rating) {
+        this.vendor = vendor;
+        this.scoreValue = scoreValue;
+        this.lastEvaluated = lastEvaluated;
+        this.rating = rating;
+    }
 
-//     public long getId() {
-//         return id;
-//     }
+    public long getId() {
+        return id;
+    }
 
-//     public void setId(long id) {
-//         this.id = id;
-//     }
+    public void setId(long id) {
+        this.id = id;
+    }
 
-//     public Vendor getVendor() {
-//         return vendor;
-//     }
+    public Vendor getVendor() {
+        return vendor;
+    }
 
-//     public void setVendor(Vendor vendor) {
-//         this.vendor = vendor;
-//     }
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
+    }
 
-//     public Double getScoreValue() {
-//         return scoreValue;
-//     }
+    public Double getScoreValue() {
+        return scoreValue;
+    }
 
-//     public void setScoreValue(Double scoreValue) {
-//         this.scoreValue = scoreValue;
-//     }
+    public void setScoreValue(Double scoreValue) {
+        this.scoreValue = scoreValue;
+    }
 
-//     public LocalDateTime getLastEvaluated() {
-//         return lastEvaluated;
-//     }
+    public LocalDateTime getLastEvaluated() {
+        return lastEvaluated;
+    }
 
-//     public void setLastEvaluated(LocalDateTime lastEvaluated) {
-//         this.lastEvaluated = lastEvaluated;
-//     }
+    public void setLastEvaluated(LocalDateTime lastEvaluated) {
+        this.lastEvaluated = lastEvaluated;
+    }
 
-//     public String getRating() {
-//         return rating;
-//     }
+    public String getRating() {
+        return rating;
+    }
 
-//     public void setRating(String rating) {
-//         this.rating = rating;
-//     }
+    public void setRating(String rating) {
+        this.rating = rating;
+    }
 
     
     
-// }
+}
