@@ -1,41 +1,39 @@
 package com.example.demo.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.example.demo.model.Vendor;
 import com.example.demo.service.VendorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/vendors")
-@Tag(name = "Vendor Controller")
 public class VendorController {
 
+    private final VendorService vendorService;
+
     @Autowired
-    private VendorService vendorService;
+    public VendorController(VendorService vendorService) {
+        this.vendorService = vendorService;
+    }
 
     @PostMapping
     public ResponseEntity<Vendor> createVendor(@RequestBody Vendor vendor) {
-        return ResponseEntity.ok(vendorService.createVendor(vendor));
+        Vendor createdVendor = vendorService.createVendor(vendor);
+        return ResponseEntity.ok(createdVendor);
     }
 
     @GetMapping
     public ResponseEntity<List<Vendor>> getAllVendors() {
-        return ResponseEntity.ok(vendorService.getAllVendors());
+        List<Vendor> vendors = vendorService.getAllVendors();
+        return ResponseEntity.ok(vendors);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Vendor> getVendor(@PathVariable Long id) {
-        return ResponseEntity.ok(vendorService.getVendor(id));
+    public ResponseEntity<Vendor> getVendorById(@PathVariable Long id) {
+        Vendor vendor = vendorService.getVendor(id);
+        return ResponseEntity.ok(vendor);
     }
 }
