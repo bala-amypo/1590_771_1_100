@@ -1,43 +1,36 @@
-package com.example.demo.model;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
 @Entity
-@Table(name = "vendors")
+@Table(name = "vendors", uniqueConstraints = @UniqueConstraint(columnNames = "vendorName"))
 public class Vendor {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private long id;
+    @Column(nullable = false, unique = true)
     private String vendorName;
+
+    @Column
     private String email;
+
+    @Column
     private String phone;
+
+    @Column
     private String industry;
+
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public Vendor(){}
-
-    public Vendor(String vendorName, String email, String phone, String industry, LocalDateTime createdAt) {
-        this.vendorName = vendorName;
-        this.email = email;
-        this.phone = phone;
-        this.industry = industry;
-        this.createdAt = createdAt;
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getVendorName() {
@@ -75,15 +68,4 @@ public class Vendor {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-
-    
-
-
-
-    
 }
