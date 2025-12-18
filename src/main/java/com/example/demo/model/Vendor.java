@@ -1,47 +1,48 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
+import java.util.Set;
 
 @Entity
-@Table(name = "vendors")
+@Table(name = "vendors") 
 public class Vendor {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id; 
+    @Column(unique = true)
+    private String vendorName; 
+    private String email; 
+    private String phone; 
+    private String industry; 
+    private LocalDateTime createdAt; 
 
-    private String vendorName;
-    private String email;
-    private String phone;
-    private String industry;
-    private LocalDateTime createdAt;
+    @ManyToMany 
+    @JoinTable(name = "vendor_document_types")
+    private Set<DocumentType> supportedDocumentTypes;
 
-    public Vendor() {}
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now(); 
+    }
+    
+    public Vendor(){}
 
-    public Vendor(String vendorName, String email, String phone, String industry) {
+    public Vendor(String vendorName, String email, String phone, String industry, LocalDateTime createdAt,
+            Set<DocumentType> supportedDocumentTypes) {
         this.vendorName = vendorName;
         this.email = email;
         this.phone = phone;
         this.industry = industry;
+        this.createdAt = createdAt;
+        this.supportedDocumentTypes = supportedDocumentTypes;
     }
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -80,4 +81,18 @@ public class Vendor {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Set<DocumentType> getSupportedDocumentTypes() {
+        return supportedDocumentTypes;
+    }
+
+    public void setSupportedDocumentTypes(Set<DocumentType> supportedDocumentTypes) {
+        this.supportedDocumentTypes = supportedDocumentTypes;
+    }
+
+    
 }
