@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
-        name = "document_types",
-        uniqueConstraints = @UniqueConstraint(columnNames = "typeName")
+    name = "document_types",
+    uniqueConstraints = @UniqueConstraint(columnNames = "typeName")
 )
 public class DocumentType {
 
@@ -29,7 +29,6 @@ public class DocumentType {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-
     @PrePersist
     protected void onCreateAndValidate() {
         this.createdAt = LocalDateTime.now();
@@ -48,7 +47,6 @@ public class DocumentType {
     }
 
     public DocumentType(){}
-
 
 
     public DocumentType(String typeName, String description, Boolean required, Integer weight,
