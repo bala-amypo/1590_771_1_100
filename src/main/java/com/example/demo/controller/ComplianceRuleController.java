@@ -1,42 +1,39 @@
-// package com.example.demo.controller;
+package com.example.demo.controller;
 
-// import java.util.List;
+import com.example.demo.model.ComplianceRule;
+import com.example.demo.service.ComplianceRuleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.http.ResponseEntity;
-// import org.springframework.web.bind.annotation.GetMapping;
-// import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.web.bind.annotation.PostMapping;
-// import org.springframework.web.bind.annotation.RequestMapping;
-// import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
-// import com.example.demo.model.ComplianceRule;
-// import com.example.demo.service.ComplianceRuleService;
+@RestController
+@RequestMapping("/api/compliance-rules")
+public class ComplianceRuleController {
 
-// import io.swagger.v3.oas.annotations.parameters.RequestBody;
-// import io.swagger.v3.oas.annotations.tags.Tag;
+    private final ComplianceRuleService complianceRuleService;
 
-// @RestController
-// @RequestMapping("/api/compliance-rules")
-// @Tag(name = "Compliance Rule Controller")
-// public class ComplianceRuleController {
+    @Autowired
+    public ComplianceRuleController(ComplianceRuleService complianceRuleService) {
+        this.complianceRuleService = complianceRuleService;
+    }
 
-//     @Autowired
-//     private ComplianceRuleService complianceRuleService;
+    @PostMapping
+    public ResponseEntity<ComplianceRule> createRule(@RequestBody ComplianceRule rule) {
+        ComplianceRule created = complianceRuleService.createRule(rule);
+        return ResponseEntity.ok(created);
+    }
 
-//     @PostMapping
-//     public ResponseEntity<ComplianceRule> createRule(@RequestBody ComplianceRule rule) {
-//         return ResponseEntity.ok(complianceRuleService.createRule(rule));
-//     }
+    @GetMapping
+    public ResponseEntity<List<ComplianceRule>> getAllRules() {
+        List<ComplianceRule> rules = complianceRuleService.getAllRules();
+        return ResponseEntity.ok(rules);
+    }
 
-//     @GetMapping
-//     public ResponseEntity<List<ComplianceRule>> getAllRules() {
-//         return ResponseEntity.ok(complianceRuleService.getAllRules());
-//     }
-
-//     @GetMapping("/{id}")
-//     public ResponseEntity<ComplianceRule> getRule(@PathVariable Long id) {
-//         return ResponseEntity.ok(complianceRuleService.getRule(id));
-//     }
-// }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<ComplianceRule> getRuleById(@PathVariable Long id) {
+        ComplianceRule rule = complianceRuleService.getRule(id);
+        return ResponseEntity.ok(rule);
+    }
+}
