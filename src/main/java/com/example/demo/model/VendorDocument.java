@@ -106,4 +106,14 @@ public class VendorDocument {
     public Boolean getIsValid() {
         return isValid;
     }
+
+    public void setUploadedAt(LocalDateTime uploadedAt) {
+    this.uploadedAt = uploadedAt;
+}
+
+public void setIsValid(Boolean isValid) {
+    this.isValid = isValid;
+}
+
+
 }
