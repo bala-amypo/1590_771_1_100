@@ -1,58 +1,69 @@
-// package com.example.demo.service.impl;
+package com.example.demo.service.impl;
 
-// import com.example.demo.model.Vendor;
-// import com.example.demo.model.DocumentType;
-// import com.example.demo.model.VendorDocument;
-// import com.example.demo.repository.VendorRepository;
-// import com.example.demo.repository.DocumentTypeRepository;
-// import com.example.demo.repository.VendorDocumentRepository;
-// import com.example.demo.exception.ResourceNotFoundException;
-// import com.example.demo.service.VendorDocumentService;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.DocumentType;
+import com.example.demo.model.Vendor;
+import com.example.demo.model.VendorDocument;
+import com.example.demo.repository.DocumentTypeRepository;
+import com.example.demo.repository.VendorDocumentRepository;
+import com.example.demo.repository.VendorRepository;
+import com.example.demo.service.VendorDocumentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-// import java.time.LocalDate;
-// import java.util.List;
+import java.time.LocalDateTime;
+import java.util.List;
 
-// @Service
-// public class VendorDocumentServiceImpl implements VendorDocumentService {
+@Service
+public class VendorDocumentServiceImpl implements VendorDocumentService {
 
-//     @Autowired
-//     private VendorRepository vendorRepository;
+    private final VendorRepository vendorRepository;
+    private final DocumentTypeRepository documentTypeRepository;
+    private final VendorDocumentRepository vendorDocumentRepository;
 
-//     @Autowired
-//     private DocumentTypeRepository documentTypeRepository;
+    @Autowired
+    public VendorDocumentServiceImpl(
+            VendorRepository vendorRepository,
+            DocumentTypeRepository documentTypeRepository,
+            VendorDocumentRepository vendorDocumentRepository) {
+        this.vendorRepository = vendorRepository;
+        this.documentTypeRepository = documentTypeRepository;
+        this.vendorDocumentRepository = vendorDocumentRepository;
+    }
 
-//     @Autowired
-//     private VendorDocumentRepository vendorDocumentRepository;
+    @Override
+    public VendorDocument uploadDocument(Long vendorId, Long typeId, VendorDocument document) {
+        Vendor vendor = vendorRepository.findById(vendorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Vendor not found with id: " + vendorId));
 
-//     @Override
-//     public VendorDocument uploadDocument(Long vendorId, Long typeId, VendorDocument document) {
-//         Vendor vendor = vendorRepository.findById(vendorId)
-//                 .orElseThrow(() -> new ResourceNotFoundException("Vendor not found with ID: " + vendorId));
+        DocumentType type = documentTypeRepository.findById(typeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Document type not found with id: " + typeId));
 
-//         DocumentType type = documentTypeRepository.findById(typeId)
-//                 .orElseThrow(() -> new ResourceNotFoundException("Document type not found with ID: " + typeId));
+        if (document.getFileUrl() == null || document.getFileUrl().isBlank()) {
+            throw new IllegalArgumentException("File URL is required");
+        }
 
-//         if (document.getExpiryDate() != null && document.getExpiryDate().isBefore(LocalDate.now())) {
-//             throw new IllegalArgumentException("Expiry date must be in the future");
-//         }
+        document.setVendor(vendor);
+        document.setDocumentType(type);
+        document.setUploadedAt(LocalDateTime.now());
 
-//         document.setVendor(vendor);
-//         document.setDocumentType(type);
-//         document.setIsValid(true);
+        if (document.getExpiryDate() == null || document.getExpiryDate().isAfter(LocalDateTime.now())) {
+            document.setIsValid(true);
+        } else {
+            document.setIsValid(false);
+        }
 
-//         return vendorDocumentRepository.save(document);
-//     }
+        return vendorDocumentRepository.save(document);
+    }
 
-//     @Override
-//     public List<VendorDocument> getDocumentsForVendor(Long vendorId) {
-//         return vendorDocumentRepository.findByVendorId(vendorId);
-//     }
+    @Override
+    public List<VendorDocument> getDocumentsForVendor(Long vendorId) {
+        return vendorDocumentRepository.findByVendor_Id(vendorId);
+    }
 
-//     @Override
-//     public VendorDocument getDocument(Long id) {
-//         return vendorDocumentRepository.findById(id)
-//                 .orElseThrow(() -> new ResourceNotFoundException("Document not found with ID: " + id));
-//     }
-// }
+    @Override
+    public VendorDocument getDocument(Long id) {
+        return vendorDocumentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Vendor document not found with id: " + id));
+    }
+}
