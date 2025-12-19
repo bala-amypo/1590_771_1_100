@@ -1,65 +1,90 @@
-// package com.example.demo.service.impl;
+package com.example.demo.service.impl;
 
-// import com.example.demo.model.ComplianceScore;
-// import com.example.demo.model.DocumentType;
-// import com.example.demo.model.VendorDocument;
-// import com.example.demo.repository.ComplianceScoreRepository;
-// import com.example.demo.repository.DocumentTypeRepository;
-// import com.example.demo.repository.VendorDocumentRepository;
-// import com.example.demo.exception.ResourceNotFoundException;
-// import com.example.demo.service.ComplianceScoreService;
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.model.*;
+import com.example.demo.repository.*;
+import com.example.demo.service.ComplianceScoreService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-// import java.util.List;
-// import java.util.Objects;
+import java.time.LocalDateTime;
+import java.util.List;
 
-// @Service
-// public class ComplianceScoreServiceImpl implements ComplianceScoreService {
+@Service
+public class ComplianceScoreServiceImpl implements ComplianceScoreService {
 
-//     @Autowired
-//     private VendorDocumentRepository vendorDocumentRepository;
+    private final VendorRepository vendorRepository;
+    private final VendorDocumentRepository vendorDocumentRepository;
+    private final DocumentTypeRepository documentTypeRepository;
+    private final ComplianceScoreRepository complianceScoreRepository;
 
-//     @Autowired
-//     private DocumentTypeRepository documentTypeRepository;
+    @Autowired
+    public ComplianceScoreServiceImpl(
+            VendorRepository vendorRepository,
+            VendorDocumentRepository vendorDocumentRepository,
+            DocumentTypeRepository documentTypeRepository,
+            ComplianceScoreRepository complianceScoreRepository) {
+        this.vendorRepository = vendorRepository;
+        this.vendorDocumentRepository = vendorDocumentRepository;
+        this.documentTypeRepository = documentTypeRepository;
+        this.complianceScoreRepository = complianceScoreRepository;
+    }
 
-//     @Autowired
-//     private ComplianceScoreRepository complianceScoreRepository;
+    @Override
+    public ComplianceScore evaluateVendor(Long vendorId) {
+        Vendor vendor = vendorRepository.findById(vendorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Vendor not found with id: " + vendorId));
 
-//     @Override
-//     public ComplianceScore evaluateVendor(Long vendorId) {
-//         List<DocumentType> requiredTypes = documentTypeRepository.findAll();
-//         List<VendorDocument> uploadedDocs = vendorDocumentRepository.findByVendorId(vendorId);
+        List<DocumentType> requiredTypes = documentTypeRepository.findAll()
+                .stream().filter(DocumentType::getRequired).toList();
 
-//         double totalWeight = requiredTypes.stream().mapToDouble(DocumentType::getWeight).sum();
-//         double score = 0;
+        List<VendorDocument> uploadedDocs = vendorDocumentRepository.findByVendor_Id(vendorId);
 
-//         for (DocumentType type : requiredTypes) {
-//             boolean hasValidDoc = uploadedDocs.stream() .anyMatch(doc -> doc.getDocumentType() != null && Objects.equals(doc.getDocumentType().getId(), type.getId()) && Boolean.TRUE.equals(doc.getIsValid()));
+        double totalWeight = requiredTypes.stream().mapToDouble(DocumentType::getWeight).sum();
+        double earnedWeight = 0;
 
-//             if (hasValidDoc) {
-//                 score += type.getWeight();
-//             }
-//         }
+        for (DocumentType type : requiredTypes) {
+            boolean hasValidDoc = uploadedDocs.stream()
+                    .anyMatch(doc -> doc.getDocumentType().getId().equals(type.getId()) && Boolean.TRUE.equals(doc.getIsValid()));
+            if (hasValidDoc) {
+                earnedWeight += type.getWeight();
+            }
+        }
 
-//         double finalScore = totalWeight == 0 ? 0 : (score / totalWeight) * 100;
+        double score = totalWeight == 0 ? 100.0 : (earnedWeight / totalWeight) * 100;
+        String rating = getRating(score);
 
-//         ComplianceScore complianceScore = complianceScoreRepository.findByVendorId(vendorId)
-//             .orElse(new ComplianceScore());
-//         complianceScore.setId(vendorId);
-//         complianceScore.setScoreValue(finalScore);
+        ComplianceScore scoreRecord = complianceScoreRepository.findByVendor_Id(vendorId);
+        if (scoreRecord == null) {
+            scoreRecord = new ComplianceScore();
+            scoreRecord.setVendor(vendor);
+        }
 
-//         return complianceScoreRepository.save(complianceScore);
-//     }
+        scoreRecord.setScoreValue(score);
+        scoreRecord.setRating(rating);
+        scoreRecord.setLastEvaluated(LocalDateTime.now());
 
-//     @Override
-//     public ComplianceScore getScore(Long vendorId) {
-//         return complianceScoreRepository.findByVendorId(vendorId)
-//             .orElseThrow(() -> new ResourceNotFoundException("Compliance score not found for vendor ID: " + vendorId));
-//     }
+        return complianceScoreRepository.save(scoreRecord);
+    }
 
-//     @Override
-//     public List<ComplianceScore> getAllScores() {
-//         return complianceScoreRepository.findAll();
-//     }
-// }
+    @Override
+    public ComplianceScore getScore(Long vendorId) {
+        ComplianceScore score = complianceScoreRepository.findByVendor_Id(vendorId);
+        if (score == null) {
+            throw new ResourceNotFoundException("Compliance score not found for vendor id: " + vendorId);
+        }
+        return score;
+    }
+
+    @Override
+    public List<ComplianceScore> getAllScores() {
+        return complianceScoreRepository.findAll();
+    }
+
+    private String getRating(double score) {
+        if (score >= 90) return "EXCELLENT";
+        if (score >= 75) return "GOOD";
+        if (score >= 50) return "POOR";
+        return "NON_COMPLIANT";
+    }
+}
