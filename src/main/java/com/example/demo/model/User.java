@@ -1,31 +1,48 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-import javax.management.relation.Role;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
 @Entity
-@Table(name = "users")
+@Table(
+    name = "users",
+    uniqueConstraints = @UniqueConstraint(columnNames = "email")
+)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
+    @Column(nullable = false)
     private String fullName;
+
+    @Column(nullable = false, unique = true)
     private String email;
-    private String password;
-    private Role role;
+
+    @Column(nullable = false)
+    private String password; 
+
+    @Column(nullable = false)
+    private String role = "USER"; 
+
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public User(){}
+    
 
-    public User(String fullName, String email, String password, Role role, LocalDateTime createdAt) {
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        if (this.role == null || this.role.isBlank()) {
+            this.role = "USER";
+        }
+    }
+
+    public User() {}
+
+
+    public User(String fullName, String email, String password, String role, LocalDateTime createdAt) {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
@@ -33,12 +50,8 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getFullName() {
@@ -62,14 +75,14 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = password; 
     }
 
-    public Role getRole() {
+    public String getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(String role) {
         this.role = role;
     }
 
@@ -80,11 +93,4 @@ public class User {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-
-
-    
 }
-
-
-   
-    
