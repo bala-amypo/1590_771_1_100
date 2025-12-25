@@ -1,20 +1,19 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Vendor;
-import com.example.demo.service.VendorService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import com.example.demo.service.impl.VendorServiceImpl;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/vendors")
-@SecurityRequirement(name = "bearerAuth")
 public class VendorController {
 
-    private final VendorService vendorService;
+    private final VendorServiceImpl vendorService;
 
-    public VendorController(VendorService vendorService) {
+    public VendorController(VendorServiceImpl vendorService) {
         this.vendorService = vendorService;
     }
 
@@ -29,7 +28,7 @@ public class VendorController {
     }
 
     @GetMapping("/{id}")
-    public Vendor getVendorById(@PathVariable Long id) {
+    public Vendor getVendor(@PathVariable Long id) {
         return vendorService.getVendor(id);
     }
 }

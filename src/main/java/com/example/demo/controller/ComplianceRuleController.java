@@ -1,37 +1,34 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.ComplianceRule;
-import com.example.demo.service.ComplianceRuleService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.security.access.prepost.PreAuthorize;
+import com.example.demo.service.impl.ComplianceRuleServiceImpl;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/compliance-rules")
-@SecurityRequirement(name = "bearerAuth")
 public class ComplianceRuleController {
 
-    private final ComplianceRuleService complianceRuleService;
+    private final ComplianceRuleServiceImpl complianceRuleService;
 
-    public ComplianceRuleController(ComplianceRuleService complianceRuleService) {
+    public ComplianceRuleController(ComplianceRuleServiceImpl complianceRuleService) {
         this.complianceRuleService = complianceRuleService;
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ComplianceRule createRule(@RequestBody ComplianceRule rule) {
+    public ComplianceRule create(@RequestBody ComplianceRule rule) {
         return complianceRuleService.createRule(rule);
     }
 
     @GetMapping
-    public List<ComplianceRule> getAllRules() {
+    public List<ComplianceRule> getAll() {
         return complianceRuleService.getAllRules();
     }
 
     @GetMapping("/{id}")
-    public ComplianceRule getRuleById(@PathVariable Long id) {
+    public ComplianceRule getById(@PathVariable Long id) {
         return complianceRuleService.getRule(id);
     }
 }

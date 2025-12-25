@@ -1,20 +1,19 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.VendorDocument;
-import com.example.demo.service.VendorDocumentService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import com.example.demo.service.impl.VendorDocumentServiceImpl;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/vendor-documents")
-@SecurityRequirement(name = "bearerAuth")
 public class VendorDocumentController {
 
-    private final VendorDocumentService vendorDocumentService;
+    private final VendorDocumentServiceImpl vendorDocumentService;
 
-    public VendorDocumentController(VendorDocumentService vendorDocumentService) {
+    public VendorDocumentController(VendorDocumentServiceImpl vendorDocumentService) {
         this.vendorDocumentService = vendorDocumentService;
     }
 
@@ -23,16 +22,17 @@ public class VendorDocumentController {
             @RequestParam Long vendorId,
             @RequestParam Long typeId,
             @RequestBody VendorDocument document) {
+
         return vendorDocumentService.uploadDocument(vendorId, typeId, document);
     }
 
     @GetMapping("/vendor/{vendorId}")
-    public List<VendorDocument> getVendorDocuments(@PathVariable Long vendorId) {
+    public List<VendorDocument> getByVendor(@PathVariable Long vendorId) {
         return vendorDocumentService.getDocumentsForVendor(vendorId);
     }
 
     @GetMapping("/{id}")
-    public VendorDocument getDocumentById(@PathVariable Long id) {
+    public VendorDocument getDocument(@PathVariable Long id) {
         return vendorDocumentService.getDocument(id);
     }
 }
