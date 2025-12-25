@@ -1,18 +1,13 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "vendor_documents")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class VendorDocument {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +36,73 @@ public class VendorDocument {
         } else {
             isValid = true;
         }
+    }
+
+    public VendorDocument() {}
+
+    public VendorDocument(Vendor vendor, DocumentType documentType, String fileUrl, LocalDateTime uploadedAt,
+            LocalDate expiryDate, Boolean isValid) {
+        this.vendor = vendor;
+        this.documentType = documentType;
+        this.fileUrl = fileUrl;
+        this.uploadedAt = uploadedAt;
+        this.expiryDate = expiryDate;
+        this.isValid = isValid;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Vendor getVendor() {
+        return vendor;
+    }
+
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
+    }
+
+    public DocumentType getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    public LocalDateTime getUploadedAt() {
+        return uploadedAt;
+    }
+
+    public void setUploadedAt(LocalDateTime uploadedAt) {
+        this.uploadedAt = uploadedAt;
+    }
+
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public Boolean getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(Boolean isValid) {
+        this.isValid = isValid;
     }
 }
