@@ -1,81 +1,38 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "compliance_scores")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ComplianceScore {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "vendor_id", unique = true, nullable = false)
+    @OneToOne
+    @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 
-    @Column(nullable = false)
-    private Double scoreValue;
-
-    @Column(nullable = false)
+    private Double scoreValue = 0.0;
     private LocalDateTime lastEvaluated;
+    private String rating;
 
-    @Column(nullable = false)
-    private String rating; 
-
-    
     @PrePersist
     @PreUpdate
-    protected void validateScore() {
-        if (scoreValue == null || scoreValue < 0 || scoreValue > 100) {
-            throw new IllegalArgumentException("Score value must be between 0 and 100");
+    public void prePersist() {
+        if (lastEvaluated == null) {
+            lastEvaluated = LocalDateTime.now();
         }
-    }
-
-    public ComplianceScore(){}
-    
-
-    public ComplianceScore(Vendor vendor, Double scoreValue, LocalDateTime lastEvaluated, String rating) {
-        this.vendor = vendor;
-        this.scoreValue = scoreValue;
-        this.lastEvaluated = lastEvaluated;
-        this.rating = rating;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Vendor getVendor() {
-        return vendor;
-    }
-
-    public void setVendor(Vendor vendor) {
-        this.vendor = vendor;
-    }
-
-    public Double getScoreValue() {
-        return scoreValue;
-    }
-
-    public void setScoreValue(Double scoreValue) {
-        this.scoreValue = scoreValue;
-    }
-
-    public LocalDateTime getLastEvaluated() {
-        return lastEvaluated;
-    }
-
-    public void setLastEvaluated(LocalDateTime lastEvaluated) {
-        this.lastEvaluated = lastEvaluated;
-    }
-
-    public String getRating() {
-        return rating;
-    }
-
-    public void setRating(String rating) {
-        this.rating = rating;
+        if (scoreValue == null) {
+            scoreValue = 0.0;
+        }
     }
 }
