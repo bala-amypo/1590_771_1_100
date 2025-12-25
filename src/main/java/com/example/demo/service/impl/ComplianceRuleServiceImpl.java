@@ -1,13 +1,12 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.ValidationException;
 import com.example.demo.model.ComplianceRule;
 import com.example.demo.repository.ComplianceRuleRepository;
 import com.example.demo.service.ComplianceRuleService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -15,18 +14,18 @@ public class ComplianceRuleServiceImpl implements ComplianceRuleService {
 
     private final ComplianceRuleRepository complianceRuleRepository;
 
-    @Autowired
     public ComplianceRuleServiceImpl(ComplianceRuleRepository complianceRuleRepository) {
         this.complianceRuleRepository = complianceRuleRepository;
     }
 
     @Override
     public ComplianceRule createRule(ComplianceRule rule) {
-        if (rule.getThreshold() == null || rule.getThreshold() < 0) {
-            throw new IllegalArgumentException("Threshold must be greater than or equal to 0");
+        if (rule.getRuleName() != null && complianceRuleRepository.existsById(rule.getId())) {
+            throw new ValidationException("Rule name must be unique");
         }
-
-        rule.setCreatedAt(LocalDateTime.now());
+        if (rule.getThreshold() < 0) {
+            throw new ValidationException("Threshold cannot be negative");
+        }
         return complianceRuleRepository.save(rule);
     }
 
@@ -38,6 +37,6 @@ public class ComplianceRuleServiceImpl implements ComplianceRuleService {
     @Override
     public ComplianceRule getRule(Long id) {
         return complianceRuleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Compliance rule not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("ComplianceRule not found"));
     }
 }
