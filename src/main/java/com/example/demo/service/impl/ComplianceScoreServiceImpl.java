@@ -8,6 +8,9 @@ import com.example.demo.util.ComplianceScoringEngine;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ComplianceScoreServiceImpl {
 
     private final VendorRepository vendorRepository;
@@ -18,7 +21,6 @@ public class ComplianceScoreServiceImpl {
     private final ComplianceScoringEngine scoringEngine =
             new ComplianceScoringEngine();
 
-    // REQUIRED constructor order
     public ComplianceScoreServiceImpl(
             VendorRepository vendorRepository,
             DocumentTypeRepository documentTypeRepository,

@@ -6,6 +6,9 @@ import com.example.demo.repository.VendorRepository;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class VendorServiceImpl {
 
     private final VendorRepository vendorRepository;

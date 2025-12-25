@@ -6,6 +6,9 @@ import com.example.demo.repository.DocumentTypeRepository;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class DocumentTypeServiceImpl {
 
     private final DocumentTypeRepository documentTypeRepository;
