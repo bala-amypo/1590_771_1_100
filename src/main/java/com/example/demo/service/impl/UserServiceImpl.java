@@ -5,6 +5,7 @@ import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@Service
 public class UserServiceImpl {
 
     private final UserRepository userRepository;

@@ -6,6 +6,9 @@ import com.example.demo.repository.ComplianceRuleRepository;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ComplianceRuleServiceImpl {
 
     private final ComplianceRuleRepository complianceRuleRepository;
