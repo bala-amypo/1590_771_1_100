@@ -2,38 +2,34 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ComplianceScore;
 import com.example.demo.service.ComplianceScoreService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/compliance-scores")
+@SecurityRequirement(name = "bearerAuth")
 public class ComplianceScoreController {
 
     private final ComplianceScoreService complianceScoreService;
 
-    @Autowired
     public ComplianceScoreController(ComplianceScoreService complianceScoreService) {
         this.complianceScoreService = complianceScoreService;
     }
 
-    @PostMapping("/evaluate/{vendorId}")
-    public ResponseEntity<ComplianceScore> evaluateVendor(@PathVariable Long vendorId) {
-        ComplianceScore score = complianceScoreService.evaluateVendor(vendorId);
-        return ResponseEntity.ok(score);
+    @PostMapping("/evaluate")
+    public ComplianceScore evaluateVendor(@RequestParam Long vendorId) {
+        return complianceScoreService.evaluateVendor(vendorId);
     }
 
-    @GetMapping("/{vendorId}")
-    public ResponseEntity<ComplianceScore> getScore(@PathVariable Long vendorId) {
-        ComplianceScore score = complianceScoreService.getScore(vendorId);
-        return ResponseEntity.ok(score);
+    @GetMapping("/vendor/{vendorId}")
+    public ComplianceScore getVendorScore(@PathVariable Long vendorId) {
+        return complianceScoreService.getScore(vendorId);
     }
 
     @GetMapping
-    public ResponseEntity<List<ComplianceScore>> getAllScores() {
-        List<ComplianceScore> scores = complianceScoreService.getAllScores();
-        return ResponseEntity.ok(scores);
+    public List<ComplianceScore> getAllScores() {
+        return complianceScoreService.getAllScores();
     }
 }
