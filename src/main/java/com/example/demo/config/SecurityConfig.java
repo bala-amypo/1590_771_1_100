@@ -33,19 +33,20 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
 
+                // ✅ Swagger
                 .requestMatchers(
-                    "/v3/api-docs/**",
-                    "/swagger-ui/**",
-                    "/swagger-ui.html"
+                        "/swagger-ui/**",
+                        "/swagger-ui.html",
+                        "/v3/api-docs/**"
                 ).permitAll()
 
+                // ✅ AUTH
                 .requestMatchers("/auth/**").permitAll()
 
-                .requestMatchers("/vendors/**").permitAll()
-                .requestMatchers("/document-types/**").permitAll()
-                .requestMatchers("/vendor-documents/**").permitAll()
-                .requestMatchers("/compliance/**").permitAll()
+                // ✅ API PREFIX (THIS WAS MISSING ❗)
+                .requestMatchers("/api/**").permitAll()
 
+                // ❌ everything else secured
                 .anyRequest().authenticated()
             )
             .addFilterBefore(
