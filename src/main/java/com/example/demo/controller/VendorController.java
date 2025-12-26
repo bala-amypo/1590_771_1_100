@@ -1,34 +1,24 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.VendorRequest;
 import com.example.demo.model.Vendor;
-import com.example.demo.service.impl.VendorServiceImpl;
-
+import com.example.demo.service.VendorService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/vendors")
 public class VendorController {
 
-    private final VendorServiceImpl vendorService;
+    private final VendorService vendorService;
 
-    public VendorController(VendorServiceImpl vendorService) {
+    public VendorController(VendorService vendorService) {
         this.vendorService = vendorService;
     }
 
     @PostMapping
-    public Vendor createVendor(@RequestBody Vendor vendor) {
-        return vendorService.createVendor(vendor);
-    }
-
-    @GetMapping
-    public List<Vendor> getAllVendors() {
-        return vendorService.getAllVendors();
-    }
-
-    @GetMapping("/{id}")
-    public Vendor getVendor(@PathVariable Long id) {
-        return vendorService.getVendor(id);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Vendor createVendor(@RequestBody VendorRequest request) {
+        return vendorService.createVendor(request);
     }
 }
