@@ -27,10 +27,7 @@ public class ComplianceScoringEngine {
         return (matchedCount * 100.0) / requiredTypes.size();
     }
 
-    /**
-     * Derives rating from score.
-     * Boundaries are STRICTLY tested.
-     */
+    
     public String deriveRating(double score) {
 
         if (score >= 90) {
