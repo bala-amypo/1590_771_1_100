@@ -4,7 +4,7 @@
 // import com.example.demo.dto.AuthResponse;
 // import com.example.demo.model.User;
 import com.example.demo.security.JwtUtil;
-// import com.example.demo.service.impl.UserServiceImpl;
+import com.example.demo.service.impl.UserServiceImpl;
 
 // import org.springframework.http.ResponseEntity;
 // import org.springframework.security.authentication.AuthenticationManager;
@@ -77,13 +77,12 @@ import org.springframework.web.bind.annotation.*;
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.model.User;
-import com.example.demo.service.UserService;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserService userService;
+    private final UserServiceImpl userService;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
