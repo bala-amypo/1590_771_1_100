@@ -1,63 +1,86 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "vendors")
 public class Vendor {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
 
-    @Column(unique = true)
     private String vendorName;
-
-    private String email;
-    private String phone;
     private String industry;
-
     private LocalDateTime createdAt;
 
     @ManyToMany
     private Set<DocumentType> supportedDocumentTypes = new HashSet<>();
 
-    public Vendor() {
+    @PrePersist
+    public void prePersist() {
+        createdAt = LocalDateTime.now();
     }
 
-    public Vendor(String vendorName, String email, String phone, String industry) {
+    public Vendor() {}
+
+    public Vendor(String vendorName, String industry, LocalDateTime createdAt,
+            Set<DocumentType> supportedDocumentTypes) {
         this.vendorName = vendorName;
-        this.email = email;
-        this.phone = phone;
+        this.industry = industry;
+        this.createdAt = createdAt;
+        this.supportedDocumentTypes = supportedDocumentTypes;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getVendorName() {
+        return vendorName;
+    }
+
+    public void setVendorName(String vendorName) {
+        this.vendorName = vendorName;
+    }
+
+    public String getIndustry() {
+        return industry;
+    }
+
+    public void setIndustry(String industry) {
         this.industry = industry;
     }
 
-    @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-
-    public String getVendorName() { return vendorName; }
-    public void setVendorName(String vendorName) { this.vendorName = vendorName; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
-
-    public String getIndustry() { return industry; }
-    public void setIndustry(String industry) { this.industry = industry; }
-
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public Set<DocumentType> getSupportedDocumentTypes() {
         return supportedDocumentTypes;
     }
+
+    public void setSupportedDocumentTypes(Set<DocumentType> supportedDocumentTypes) {
+        this.supportedDocumentTypes = supportedDocumentTypes;
+    }
+
+    
+    
+
 }
