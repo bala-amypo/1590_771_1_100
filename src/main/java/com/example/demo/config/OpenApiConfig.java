@@ -1,12 +1,10 @@
 package com.example.demo.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.Components;          // ✅ CORRECT IMPORT
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
-import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,25 +24,18 @@ public class OpenApiConfig {
                 .version("1.0")
                 .description("Vendor Compliance – Document Validator"))
 
-            // ✅ Your server URL
             .servers(List.of(
                 new Server().url("https://9114.pro604cr.amypo.ai")
             ))
 
-            // ✅ JWT Security Scheme
+            // ✅ Define JWT scheme ONLY (no global requirement)
             .components(new Components()
                 .addSecuritySchemes(SECURITY_SCHEME_NAME,
                     new SecurityScheme()
-                        .name(SECURITY_SCHEME_NAME)
                         .type(SecurityScheme.Type.HTTP)
                         .scheme("bearer")
                         .bearerFormat("JWT")
                 )
-            )
-
-            // ✅ Apply security globally (🔒 icons appear)
-            .addSecurityItem(
-                new SecurityRequirement().addList(SECURITY_SCHEME_NAME)
             );
     }
 }
