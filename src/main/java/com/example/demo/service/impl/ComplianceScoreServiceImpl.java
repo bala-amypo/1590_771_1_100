@@ -27,6 +27,11 @@ public class ComplianceScoreServiceImpl {
         this.complianceScoreRepository = complianceScoreRepository;
     }
 
+    // ✅ FIX #1 — REQUIRED BY CONTROLLER
+    public List<ComplianceScore> getAllScores() {
+        return complianceScoreRepository.findAll();
+    }
+
     public ComplianceScore evaluateVendor(Long vendorId) {
 
         Vendor vendor = vendorRepository.findById(vendorId)
