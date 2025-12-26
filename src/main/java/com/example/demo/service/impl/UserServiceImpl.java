@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.exception.ValidationException;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
@@ -21,6 +22,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User registerUser(User user) {
+
+        // ✅ THIS IS THE KEY FIX
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new ValidationException("Email already exists");
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
