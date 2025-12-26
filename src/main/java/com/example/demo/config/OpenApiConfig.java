@@ -1,9 +1,9 @@
 package com.example.demo.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Components;          // ✅ CORRECT IMPORT
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.servers.Server;
-import io.swagger.v3.oas.models.security.Components;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 
@@ -19,14 +19,14 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
+
         return new OpenAPI()
-            // ✅ API info (optional but good)
             .info(new Info()
                 .title("Vendor Compliance API")
                 .version("1.0")
                 .description("Vendor Compliance – Document Validator"))
 
-            // ✅ Server URL (your existing config)
+            // ✅ Your server URL
             .servers(List.of(
                 new Server().url("https://9114.pro604cr.amypo.ai")
             ))
@@ -42,7 +42,7 @@ public class OpenApiConfig {
                 )
             )
 
-            // ✅ Apply security globally (shows 🔒 icons)
+            // ✅ Apply security globally (🔒 icons appear)
             .addSecurityItem(
                 new SecurityRequirement().addList(SECURITY_SCHEME_NAME)
             );
