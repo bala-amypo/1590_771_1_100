@@ -7,7 +7,8 @@ import com.example.demo.security.JwtUtil;
 import com.example.demo.service.impl.UserServiceImpl;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,15 +16,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserServiceImpl userService;
     private final AuthenticationManager authenticationManager;
+    private final UserServiceImpl userService;
     private final JwtUtil jwtUtil;
 
-    public AuthController(UserServiceImpl userService,
-                          AuthenticationManager authenticationManager,
+    public AuthController(AuthenticationManager authenticationManager,
+                          UserServiceImpl userService,
                           JwtUtil jwtUtil) {
-        this.userService = userService;
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -36,21 +37,27 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
 
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(), request.getPassword())
+            new UsernamePasswordAuthenticationToken(
+                request.getEmail(),
+                request.getPassword()
+            )
         );
 
         User user = userService.findByEmail(request.getEmail());
 
+        // ✅ FIXED CALL (matches JwtUtil)
         String token = jwtUtil.generateToken(
-                authentication,
-                user.getId(),
-                user.getEmail(),
-                user.getRole()
+            user.getEmail(),
+            user.getRole()
         );
 
         return ResponseEntity.ok(
-                new AuthResponse(token, user.getId(), user.getEmail(), user.getRole())
+            new AuthResponse(
+                token,
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+            )
         );
     }
 }
