@@ -15,14 +15,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailsService userDetailsService;
+    private final JwtUtil jwtUtil;
 
-    public SecurityConfig(
-            JwtAuthenticationFilter jwtAuthenticationFilter,
-            CustomUserDetailsService userDetailsService) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    public SecurityConfig(CustomUserDetailsService userDetailsService,
+                          JwtUtil jwtUtil) {
         this.userDetailsService = userDetailsService;
+        this.jwtUtil = jwtUtil;
+    }
+
+    // ✅ REGISTER FILTER PROPERLY (THIS FIXES THE ERROR)
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+        return new JwtAuthenticationFilter(jwtUtil, userDetailsService);
     }
 
     @Bean
@@ -41,11 +46,11 @@ public class SecurityConfig {
                     "/health"
                 ).permitAll()
                 .requestMatchers("/api/**").authenticated()
-                .anyRequest().permitAll()   // ✅ FIX
+                .anyRequest().permitAll()
             )
             .authenticationProvider(authenticationProvider())
             .addFilterBefore(
-                jwtAuthenticationFilter,
+                jwtAuthenticationFilter(),
                 UsernamePasswordAuthenticationFilter.class
             );
 
