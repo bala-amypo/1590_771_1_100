@@ -40,9 +40,8 @@ public class SecurityConfig {
         return new JwtAuthenticationFilter(jwtUtil());
     }
 
-    // ✅ THIS IS THE KEY FIX
     @Bean
-    public DaoAuthenticationProvider daoAuthenticationProvider() {
+    public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
@@ -56,23 +55,27 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+            // 🔥 THIS IS THE KEY LINE (ABSOLUTELY REQUIRED)
             .csrf(csrf -> csrf.disable())
+
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .authenticationProvider(daoAuthenticationProvider()) // 🔥 REQUIRED
+
+            .authenticationProvider(authenticationProvider())
+
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/",
                     "/auth/**",
                     "/swagger-ui/**",
                     "/v3/api-docs/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
+
             .addFilterBefore(
                 jwtAuthenticationFilter(),
                 UsernamePasswordAuthenticationFilter.class
