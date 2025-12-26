@@ -1,4 +1,4 @@
-// package com.example.demo.controller;
+package com.example.demo.controller;
 
 // import com.example.demo.dto.AuthRequest;
 // import com.example.demo.dto.AuthResponse;
@@ -62,7 +62,6 @@ import com.example.demo.service.impl.UserServiceImpl;
 //     }
 // }
 
-package com.example.demo.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,7 +86,7 @@ public class AuthController {
     private final UserDetailsService userDetailsService;
     private final JwtUtil jwtUtil;
 
-    public AuthController(UserService userService,
+    public AuthController(UserServiceImpl userService,
                           AuthenticationManager authenticationManager,
                           UserDetailsService userDetailsService,
                           JwtUtil jwtUtil) {
