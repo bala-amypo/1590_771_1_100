@@ -9,7 +9,6 @@ import com.example.demo.service.impl.UserServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,15 +27,17 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
+    // ✅ REGISTER
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
         return ResponseEntity.ok(userService.registerUser(user));
     }
 
+    // ✅ LOGIN (200 OK + TOKEN)
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
 
-        Authentication authentication = authenticationManager.authenticate(
+        authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 request.getEmail(),
                 request.getPassword()
@@ -45,7 +46,6 @@ public class AuthController {
 
         User user = userService.findByEmail(request.getEmail());
 
-        // ✅ FIXED CALL (matches JwtUtil)
         String token = jwtUtil.generateToken(
             user.getEmail(),
             user.getRole()
