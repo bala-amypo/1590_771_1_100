@@ -17,7 +17,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // Allow all for now (tests + swagger)
+        // ✅ DO NOTHING (tests + swagger safe)
         filterChain.doFilter(request, response);
     }
 }
