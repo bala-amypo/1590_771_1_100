@@ -4,11 +4,13 @@ import com.example.demo.model.Vendor;
 import com.example.demo.service.impl.VendorServiceImpl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/vendors")
+@SecurityRequirement(name = "bearerAuth")
 public class VendorController {
 
     private final VendorServiceImpl vendorService;
