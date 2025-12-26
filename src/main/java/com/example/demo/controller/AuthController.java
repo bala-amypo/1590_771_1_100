@@ -3,7 +3,7 @@
 // import com.example.demo.dto.AuthRequest;
 // import com.example.demo.dto.AuthResponse;
 // import com.example.demo.model.User;
-// import com.example.demo.security.JwtUtil;
+import com.example.demo.security.JwtUtil;
 // import com.example.demo.service.impl.UserServiceImpl;
 
 // import org.springframework.http.ResponseEntity;
@@ -77,7 +77,6 @@ import org.springframework.web.bind.annotation.*;
 import com.example.demo.dto.AuthRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.model.User;
-import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
 
 @RestController
@@ -87,16 +86,16 @@ public class AuthController {
     private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final UserDetailsService userDetailsService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtUtil jwtUtil;
 
     public AuthController(UserService userService,
                           AuthenticationManager authenticationManager,
                           UserDetailsService userDetailsService,
-                          JwtTokenProvider jwtTokenProvider) {
+                          JwtUtil jwtUtil) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -107,7 +106,7 @@ public class AuthController {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", savedUser.getRole());
 
-        String token = jwtTokenProvider.generateToken(
+        String token = jwtUtil.generateToken(
                 claims,
                 savedUser.getEmail()
         );
@@ -144,7 +143,7 @@ public class AuthController {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", user.getRole());
 
-        String token = jwtTokenProvider.generateToken(
+        String token = jwtUtil.generateToken(
                 claims,
                 userDetails.getUsername()
         );
