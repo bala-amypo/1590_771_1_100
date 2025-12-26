@@ -12,8 +12,10 @@ public class UserServiceImpl {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -22,13 +24,7 @@ public class UserServiceImpl {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email already used");
         }
-
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        if (user.getRole() == null) {
-            user.setRole("USER");
-        }
-
         return userRepository.save(user);
     }
 
