@@ -2,8 +2,9 @@ package com.example.demo.config;
 
 import com.example.demo.security.JwtAuthenticationFilter;
 import com.example.demo.security.JwtUtil;
-import org.springframework.context.annotation.*;
-import org.springframework.security.authentication.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,7 +22,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtUtil jwtUtil() {
-        return new JwtUtil("secret-key", 3600000);
+        return new JwtUtil("secret-key", 3600000); // 1 hour
     }
 
     @Bean
@@ -31,28 +32,33 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
+            AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+            throws Exception {
 
-        http.csrf(csrf -> csrf.disable())
-            .sessionManagement(sm ->
-                sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                        "/auth/**",
-                        "/swagger-ui/**",
-                        "/v3/api-docs/**"
+                    "/auth/**",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/api/**"     // 👈 Swagger + API accessible
                 ).permitAll()
-                .requestMatchers("/api/**").authenticated()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
             )
             .addFilterBefore(
-                    jwtAuthenticationFilter(),
-                    org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class
+                jwtAuthenticationFilter(),
+                org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class
             );
 
         return http.build();
