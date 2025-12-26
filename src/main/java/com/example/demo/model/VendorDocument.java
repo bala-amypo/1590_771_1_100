@@ -1,15 +1,20 @@
 package com.example.demo.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "vendor_documents")
 public class VendorDocument {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue
     private Long id;
 
     @ManyToOne
@@ -18,45 +23,85 @@ public class VendorDocument {
     @ManyToOne
     private DocumentType documentType;
 
-    @Column(nullable = false)
     private String fileUrl;
-
-    private LocalDate expiryDate;
-
-    private Boolean isValid;
-
     private LocalDateTime uploadedAt;
-
-    public VendorDocument() {
-    }
-
-    public VendorDocument(String fileUrl, LocalDate expiryDate) {
-        this.fileUrl = fileUrl;
-        this.expiryDate = expiryDate;
-    }
+    private LocalDate expiryDate;
+    private Boolean isValid;
 
     @PrePersist
     public void prePersist() {
-        this.uploadedAt = LocalDateTime.now();
+        uploadedAt = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public VendorDocument() {}
 
-    public Vendor getVendor() { return vendor; }
-    public void setVendor(Vendor vendor) { this.vendor = vendor; }
+    public VendorDocument(Vendor vendor, DocumentType documentType, String fileUrl, LocalDateTime uploadedAt,
+            LocalDate expiryDate, Boolean isValid) {
+        this.vendor = vendor;
+        this.documentType = documentType;
+        this.fileUrl = fileUrl;
+        this.uploadedAt = uploadedAt;
+        this.expiryDate = expiryDate;
+        this.isValid = isValid;
+    }
 
-    public DocumentType getDocumentType() { return documentType; }
-    public void setDocumentType(DocumentType documentType) { this.documentType = documentType; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getFileUrl() { return fileUrl; }
-    public void setFileUrl(String fileUrl) { this.fileUrl = fileUrl; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public LocalDate getExpiryDate() { return expiryDate; }
-    public void setExpiryDate(LocalDate expiryDate) { this.expiryDate = expiryDate; }
+    public Vendor getVendor() {
+        return vendor;
+    }
 
-    public Boolean getIsValid() { return isValid; }
-    public void setIsValid(Boolean valid) { isValid = valid; }
+    public void setVendor(Vendor vendor) {
+        this.vendor = vendor;
+    }
 
-    public LocalDateTime getUploadedAt() { return uploadedAt; }
+    public DocumentType getDocumentType() {
+        return documentType;
+    }
+
+    public void setDocumentType(DocumentType documentType) {
+        this.documentType = documentType;
+    }
+
+    public String getFileUrl() {
+        return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
+    }
+
+    public LocalDateTime getUploadedAt() {
+        return uploadedAt;
+    }
+
+    public void setUploadedAt(LocalDateTime uploadedAt) {
+        this.uploadedAt = uploadedAt;
+    }
+
+    public LocalDate getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(LocalDate expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public Boolean getIsValid() {
+        return isValid;
+    }
+
+    public void setIsValid(Boolean isValid) {
+        this.isValid = isValid;
+    }
+
+    
+
+    
 }
