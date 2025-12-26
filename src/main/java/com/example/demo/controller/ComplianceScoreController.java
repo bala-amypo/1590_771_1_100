@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ComplianceScore;
 import com.example.demo.service.impl.ComplianceScoreServiceImpl;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,24 +11,28 @@ import java.util.List;
 @RequestMapping("/api/compliance-scores")
 public class ComplianceScoreController {
 
-    private final ComplianceScoreServiceImpl complianceScoreService;
+    private final ComplianceScoreServiceImpl scoreService;
 
-    public ComplianceScoreController(ComplianceScoreServiceImpl complianceScoreService) {
-        this.complianceScoreService = complianceScoreService;
+    public ComplianceScoreController(ComplianceScoreServiceImpl scoreService) {
+        this.scoreService = scoreService;
     }
 
     @PostMapping("/evaluate")
-    public ComplianceScore evaluate(@RequestParam Long vendorId) {
-        return complianceScoreService.evaluateVendor(vendorId);
+    public ResponseEntity<ComplianceScore> evaluate(
+            @RequestParam Long vendorId) {
+
+        return ResponseEntity.ok(scoreService.evaluateVendor(vendorId));
     }
 
     @GetMapping("/vendor/{vendorId}")
-    public ComplianceScore getByVendor(@PathVariable Long vendorId) {
-        return complianceScoreService.getScore(vendorId);
+    public ResponseEntity<ComplianceScore> getByVendor(
+            @PathVariable Long vendorId) {
+
+        return ResponseEntity.ok(scoreService.getScore(vendorId));
     }
 
     @GetMapping
-    public List<ComplianceScore> getAll() {
-        return complianceScoreService.getAllScores();
+    public ResponseEntity<List<ComplianceScore>> getAll() {
+        return ResponseEntity.ok(scoreService.getAllScores());
     }
 }

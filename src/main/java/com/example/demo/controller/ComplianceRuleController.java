@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ComplianceRule;
 import com.example.demo.service.impl.ComplianceRuleServiceImpl;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,24 +11,24 @@ import java.util.List;
 @RequestMapping("/api/compliance-rules")
 public class ComplianceRuleController {
 
-    private final ComplianceRuleServiceImpl complianceRuleService;
+    private final ComplianceRuleServiceImpl ruleService;
 
-    public ComplianceRuleController(ComplianceRuleServiceImpl complianceRuleService) {
-        this.complianceRuleService = complianceRuleService;
+    public ComplianceRuleController(ComplianceRuleServiceImpl ruleService) {
+        this.ruleService = ruleService;
     }
 
     @PostMapping
-    public ComplianceRule create(@RequestBody ComplianceRule rule) {
-        return complianceRuleService.createRule(rule);
+    public ResponseEntity<ComplianceRule> create(@RequestBody ComplianceRule rule) {
+        return ResponseEntity.ok(ruleService.createRule(rule));
     }
 
     @GetMapping
-    public List<ComplianceRule> getAll() {
-        return complianceRuleService.getAllRules();
+    public ResponseEntity<List<ComplianceRule>> getAll() {
+        return ResponseEntity.ok(ruleService.getAllRules());
     }
 
     @GetMapping("/{id}")
-    public ComplianceRule getById(@PathVariable Long id) {
-        return complianceRuleService.getRule(id);
+    public ResponseEntity<ComplianceRule> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(ruleService.getRule(id));
     }
 }

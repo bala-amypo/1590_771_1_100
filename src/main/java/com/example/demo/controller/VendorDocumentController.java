@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.VendorDocument;
 import com.example.demo.service.impl.VendorDocumentServiceImpl;
-
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,21 +18,27 @@ public class VendorDocumentController {
     }
 
     @PostMapping
-    public VendorDocument uploadDocument(
+    public ResponseEntity<VendorDocument> upload(
             @RequestParam Long vendorId,
             @RequestParam Long typeId,
             @RequestBody VendorDocument document) {
 
-        return vendorDocumentService.uploadDocument(vendorId, typeId, document);
+        return ResponseEntity.ok(
+                vendorDocumentService.uploadDocument(vendorId, typeId, document)
+        );
     }
 
     @GetMapping("/vendor/{vendorId}")
-    public List<VendorDocument> getByVendor(@PathVariable Long vendorId) {
-        return vendorDocumentService.getDocumentsForVendor(vendorId);
+    public ResponseEntity<List<VendorDocument>> getByVendor(
+            @PathVariable Long vendorId) {
+
+        return ResponseEntity.ok(
+                vendorDocumentService.getDocumentsForVendor(vendorId)
+        );
     }
 
     @GetMapping("/{id}")
-    public VendorDocument getDocument(@PathVariable Long id) {
-        return vendorDocumentService.getDocument(id);
+    public ResponseEntity<VendorDocument> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(vendorDocumentService.getDocument(id));
     }
 }
