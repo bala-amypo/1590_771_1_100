@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
@@ -39,9 +40,9 @@ public class SecurityConfig {
         return new JwtAuthenticationFilter(jwtUtil());
     }
 
-    // ✅ THIS IS THE MISSING PIECE
+    // ✅ THIS IS THE KEY FIX
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
@@ -55,28 +56,26 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
-            throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .authenticationProvider(authenticationProvider()) // ✅ REGISTER PROVIDER
+            .authenticationProvider(daoAuthenticationProvider()) // 🔥 REQUIRED
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/",
                     "/auth/**",
                     "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/api/**"
+                    "/v3/api-docs/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(
                 jwtAuthenticationFilter(),
-                org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter.class
+                UsernamePasswordAuthenticationFilter.class
             );
 
         return http.build();
