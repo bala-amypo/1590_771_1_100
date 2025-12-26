@@ -8,28 +8,22 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final String secret;
-    private final long expirationMs;
-
-    public JwtUtil(String secret, long expirationMs) {
-        this.secret = secret;
-        this.expirationMs = expirationMs;
-    }
+    // ✅ DEFINE CONFIG HERE (NO SPRING INJECTION)
+    private static final String SECRET =
+            "my-super-secret-key-12345678901234567890";
+    private static final long EXPIRATION_MS =
+            60 * 60 * 1000; // 1 hour
 
     public String generateToken(String email, String role) {
 
         return Jwts.builder()
-                .setSubject(email)                    // ✅ username/email
-                .claim("role", role)                  // ✅ role
+                .setSubject(email)
+                .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
-                .signWith(SignatureAlgorithm.HS256, secret)
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
+                .signWith(SignatureAlgorithm.HS256, SECRET)
                 .compact();
     }
-
-    /* ==============================
-       REQUIRED BY JwtAuthenticationFilter
-       ============================== */
 
     public String getUsernameFromToken(String token) {
         return getClaims(token).getSubject();
@@ -50,7 +44,7 @@ public class JwtUtil {
 
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(secret)
+                .setSigningKey(SECRET)
                 .parseClaimsJws(token)
                 .getBody();
     }
