@@ -1,8 +1,13 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.VendorRequest;
 import com.example.demo.model.Vendor;
+import java.util.List;
 
 public interface VendorService {
-    Vendor createVendor(VendorRequest request);
+
+    Vendor createVendor(Vendor vendor);
+
+    Vendor getVendor(Long id);
+
+    List<Vendor> getAllVendors();
 }
