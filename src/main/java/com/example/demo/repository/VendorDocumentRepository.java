@@ -11,5 +11,6 @@ public interface VendorDocumentRepository extends JpaRepository<VendorDocument, 
 
     List<VendorDocument> findByVendor(Vendor vendor);
 
-    List<VendorDocument> findExpiredDocuments(LocalDate date);
+    // ✅ FIXED METHOD
+    List<VendorDocument> findByExpiryDateBefore(LocalDate date);
 }
