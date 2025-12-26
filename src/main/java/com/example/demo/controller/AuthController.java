@@ -27,13 +27,11 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-    // ✅ REGISTER
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
         return ResponseEntity.ok(userService.registerUser(user));
     }
 
-    // ✅ LOGIN (200 OK + TOKEN)
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
 
