@@ -1,36 +1,32 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Vendor;
-import com.example.demo.service.impl.VendorServiceImpl;
+import com.example.demo.service.VendorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/vendors")
-@SecurityRequirement(name = "bearerAuth")
 public class VendorController {
+    private final VendorService vendorService;
 
-    private final VendorServiceImpl vendorService;
-
-    public VendorController(VendorServiceImpl vendorService) {
+    public VendorController(VendorService vendorService) {
         this.vendorService = vendorService;
     }
 
     @PostMapping
-    public ResponseEntity<Vendor> create(@RequestBody Vendor vendor) {
+    public ResponseEntity<Vendor> createVendor(@RequestBody Vendor vendor) {
         return ResponseEntity.ok(vendorService.createVendor(vendor));
     }
 
     @GetMapping
-    public ResponseEntity<List<Vendor>> getAll() {
+    public ResponseEntity<List<Vendor>> getAllVendors() {
         return ResponseEntity.ok(vendorService.getAllVendors());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Vendor> getById(@PathVariable Long id) {
+    public ResponseEntity<Vendor> getVendor(@PathVariable Long id) {
         return ResponseEntity.ok(vendorService.getVendor(id));
     }
 }
