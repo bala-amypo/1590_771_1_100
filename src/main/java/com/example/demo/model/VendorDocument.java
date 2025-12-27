@@ -13,9 +13,10 @@ public class VendorDocument {
     private Long id;
 
     // Test 34: Validates ManyToOne for documentType
-    @ManyToOne
-    @JoinColumn(name = "document_type_id")
-    private DocumentType documentType;
+   @ManyToOne
+   @JoinColumn(name = "document_type_id")
+   private DocumentType documentType;
+
 
     // Test 33: Validates ManyToOne for vendor
     @ManyToOne
