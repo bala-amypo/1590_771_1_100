@@ -6,6 +6,7 @@ import com.example.demo.security.JwtUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -20,7 +21,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -30,42 +30,49 @@ public class SecurityConfig {
 
     public SecurityConfig(JwtUtil jwtUtil, CustomUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
-        this.userDetailsService = userDetailsService;
+        this.userDetailsService = userDetailsService; //
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() { 
-        return new BCryptPasswordEncoder(); 
+        return new BCryptPasswordEncoder(); //
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService); //
+        authProvider.setPasswordEncoder(passwordEncoder()); //
+        return authProvider;
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration auth) throws Exception {
-        return auth.getAuthenticationManager();
+        return auth.getAuthenticationManager(); //
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(Customizer.withDefaults()) // Enable CORS
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for stateless API
+            .cors(Customizer.withDefaults())
+            .csrf(csrf -> csrf.disable()) //
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //
             .authorizeHttpRequests(auth -> auth
-                // Explicitly allow all Swagger and Auth paths
                 .requestMatchers(
                     "/auth/**", 
                     "/health", 
                     "/v3/api-docs/**", 
                     "/swagger-ui/**", 
                     "/swagger-ui.html"
-                ).permitAll()
-                // Protect all business logic endpoints
-                .requestMatchers("/api/**").authenticated()
+                ).permitAll() //
+                .requestMatchers("/api/**").authenticated() //
                 .anyRequest().authenticated()
             );
 
-        // Add the JWT filter
+        http.authenticationProvider(authenticationProvider()); // Explicitly set the provider
+
         http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsService), 
-                             UsernamePasswordAuthenticationFilter.class);
+                             UsernamePasswordAuthenticationFilter.class); //
 
         return http.build();
     }
@@ -73,7 +80,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("*")); // Allow all origins for testing
+        configuration.setAllowedOrigins(Arrays.asList("*")); 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
