@@ -10,7 +10,6 @@ import com.example.demo.repository.VendorRepository;
 import com.example.demo.service.VendorDocumentService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -40,7 +39,6 @@ public class VendorDocumentServiceImpl implements VendorDocumentService {
 
         document.setVendor(vendor);
         document.setDocumentType(documentType);
-        document.setUploadedDate(LocalDate.now());
 
         return vendorDocumentRepository.save(document);
     }
