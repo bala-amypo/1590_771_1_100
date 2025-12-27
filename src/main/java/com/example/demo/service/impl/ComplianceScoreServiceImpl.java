@@ -7,6 +7,7 @@ import com.example.demo.repository.*;
 import com.example.demo.service.ComplianceScoreService;
 import com.example.demo.util.ComplianceScoringEngine;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional; // Added for data consistency
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,19 +30,25 @@ public class ComplianceScoreServiceImpl implements ComplianceScoreService {
     }
 
     @Override
+    @Transactional
     public ComplianceScore evaluateVendor(Long vendorId) {
+        // 1. Verify vendor exists
         Vendor vendor = vendorRepository.findById(vendorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Vendor not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Vendor not found with ID: " + vendorId));
         
+        // 2. Fetch required document types and uploaded documents
         List<DocumentType> requiredTypes = documentTypeRepository.findByRequiredTrue();
         List<VendorDocument> docs = vendorDocumentRepository.findByVendor(vendor);
 
+        // 3. Calculate score using the engine
         double scoreVal = scoringEngine.calculateScore(requiredTypes, docs);
         if (scoreVal < 0) throw new ValidationException("Compliance score cannot be negative");
 
-        ComplianceScore score = complianceScoreRepository.findByVendorId(vendorId)
+        // 4. Retrieve existing score or create new using the method required by the test suite
+        ComplianceScore score = complianceScoreRepository.findByVendor_Id(vendorId)
                 .orElse(new ComplianceScore());
         
+        // 5. Update score attributes
         score.setVendor(vendor);
         score.setScoreValue(scoreVal);
         score.setRating(scoringEngine.deriveRating(scoreVal));
@@ -52,10 +59,13 @@ public class ComplianceScoreServiceImpl implements ComplianceScoreService {
 
     @Override
     public ComplianceScore getScore(Long vendorId) {
-        return complianceScoreRepository.findByVendorId(vendorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Score not found"));
+        // Uses the underscore naming convention to stay consistent with the test suite
+        return complianceScoreRepository.findByVendor_Id(vendorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Compliance score not found for vendor: " + vendorId));
     }
 
     @Override
-    public List<ComplianceScore> getAllScores() { return complianceScoreRepository.findAll(); }
+    public List<ComplianceScore> getAllScores() { 
+        return complianceScoreRepository.findAll(); 
+    }
 }
