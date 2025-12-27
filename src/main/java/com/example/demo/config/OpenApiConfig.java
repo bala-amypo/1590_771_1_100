@@ -39,7 +39,7 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        // Must match the key used in .addList()
+        // This name must be consistent across Requirement and Scheme 
         final String securitySchemeName = "bearerAuth"; 
 
         return new OpenAPI()
@@ -47,26 +47,30 @@ public class OpenApiConfig {
                         .title("Vendor Compliance - Document Validator API")
                         .version("1.0")
                         .description("API for managing vendor documents, compliance rules, and scoring."))
-                // 🌍 Server URL
+                
+                // 🌍 Server URL - Required for the specific environment
                 .servers(List.of(
                         new Server().url("https://9114.pro604cr.amypo.ai")
                 ))
-                // 🏷️ Adding tags for controller groups 
+
+                // 🏷️ Tags for each controller group as required [cite: 370]
                 .tags(List.of(
                         new Tag().name("Auth").description("Authentication endpoints"),
                         new Tag().name("Vendors").description("Vendor management"),
                         new Tag().name("Documents").description("Vendor document operations"),
                         new Tag().name("Compliance").description("Rules and Scoring evaluation")
                 ))
-                // 🔒 Apply security globally to all protected endpoints [cite: 372]
+
+                // 🔒 Apply JWT Bearer security globally 
                 .addSecurityItem(new SecurityRequirement().addList(securitySchemeName))
-                // 🔑 Register security scheme definition [cite: 372]
+
+                // 🔑 Define the Security Scheme for JWT 
                 .components(new Components()
                         .addSecuritySchemes(securitySchemeName,
                                 new SecurityScheme()
                                         .name(securitySchemeName)
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
-                                        .bearerFormat("JWT")));
+                                        .bearerFormat("JWT"))); 
     }
 }
