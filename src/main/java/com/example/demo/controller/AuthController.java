@@ -45,7 +45,7 @@ public class AuthController {
 
         User user = userService.findByEmail(request.getEmail());
 
-        // ✅ FIXED CALL (matches JwtUtil)
+        
         String token = jwtUtil.generateToken(
             user.getEmail(),
             user.getRole()

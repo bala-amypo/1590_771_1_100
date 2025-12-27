@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() ->
                         new UsernameNotFoundException("User not found"));
 
-        // ✅ DEFAULT ROLE SAFETY (CRITICAL FIX)
+        
         String role = user.getRole();
         if (role == null || role.isBlank()) {
             role = "USER";

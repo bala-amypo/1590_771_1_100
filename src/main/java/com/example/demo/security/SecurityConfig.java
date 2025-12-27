@@ -24,7 +24,7 @@ public class SecurityConfig {
         this.jwtUtil = jwtUtil;
     }
 
-    // ✅ REGISTER FILTER PROPERLY (THIS FIXES THE ERROR)
+    
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() {
         return new JwtAuthenticationFilter(jwtUtil, userDetailsService);

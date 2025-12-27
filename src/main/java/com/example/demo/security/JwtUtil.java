@@ -8,7 +8,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // ✅ DEFINE CONFIG HERE (NO SPRING INJECTION)
+    
     private static final String SECRET =
             "my-super-secret-key-12345678901234567890";
     private static final long EXPIRATION_MS =

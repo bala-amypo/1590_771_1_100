@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.userDetailsService = userDetailsService;
     }
 
-    // 🔥 DO NOT FILTER LOGIN / REGISTER / SWAGGER
+    
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
@@ -73,7 +73,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
-        // 🔥 NEVER BLOCK REQUEST
+        
         filterChain.doFilter(request, response);
     }
 }
