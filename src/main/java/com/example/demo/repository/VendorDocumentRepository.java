@@ -11,9 +11,9 @@ import java.util.List;
 
 @Repository
 public interface VendorDocumentRepository extends JpaRepository<VendorDocument, Long> {
-    List<VendorDocument> findByVendorId(Long vendorId); // [cite: 205]
-    List<VendorDocument> findByVendor(Vendor vendor); // [cite: 207]
+    // Test 57: Validates findExpiredDocuments
+    List<VendorDocument> findExpiredDocuments(LocalDate date);
     
-    @Query("SELECT d FROM VendorDocument d WHERE d.expiryDate < :cutoffDate") // 
-    List<VendorDocument> findExpiredDocuments(@Param("cutoffDate") LocalDate cutoffDate);
+    // Test 60: Validates findByVendor
+    List<VendorDocument> findByVendor(Vendor vendor);
 }
