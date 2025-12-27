@@ -1,51 +1,52 @@
 package com.example.demo.security;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct; // Changed from javax to jakarta
 
+import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtil {
 
-    
-    private static final String SECRET =
-            "my-super-secret-key-12345678901234567890";
-    private static final long EXPIRATION_MS =
-            60 * 60 * 1000; // 1 hour
+    // Must match the key structure required by the technology stack [cite: 7, 345]
+    private final String secret = "ThisIsAHighlySecureSecretKeyThatIsAtLeastThirtyTwoCharsLong!";
+    private final long validityInMs = 3600000; // 1 hour
+    private Key signingKey;
 
-    public String generateToken(String email, String role) {
+    @PostConstruct // Standard initialization after dependency injection [cite: 346]
+    public void init() {
+        this.signingKey = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
+    /**
+     * Generates a real JWT token with userId and role claims [cite: 348-349]
+     */
+    public String generateToken(Authentication authentication, Long userId, String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("userId", userId)
                 .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
-                .signWith(SignatureAlgorithm.HS256, SECRET)
+                .setExpiration(new Date(System.currentTimeMillis() + validityInMs))
+                .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
-    }
-
-    public String getUsernameFromToken(String token) {
-        return getClaims(token).getSubject();
-    }
-
-    public String getRoleFromToken(String token) {
-        return (String) getClaims(token).get("role");
     }
 
     public boolean validateToken(String token) {
         try {
-            getClaims(token);
+            Jwts.parserBuilder().setSigningKey(signingKey).build().parseClaimsJws(token);
             return true;
-        } catch (JwtException | IllegalArgumentException ex) {
+        } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
-    private Claims getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET)
-                .parseClaimsJws(token)
-                .getBody();
+    public String getEmailFromToken(String token) {
+        return Jwts.parserBuilder().setSigningKey(signingKey).build()
+                .parseClaimsJws(token).getBody().getSubject();
     }
 }
