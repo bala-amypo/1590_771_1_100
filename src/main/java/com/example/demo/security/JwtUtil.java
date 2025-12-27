@@ -1,40 +1,51 @@
 package com.example.demo.security;
 
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
-import java.security.Key;
+
 import java.util.Date;
 
 @Component
 public class JwtUtil {
-    // Standard key for HS256 (Must be at least 256 bits) [cite: 345-346]
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-    private final long validityInMs = 3600000; // 1 hour [cite: 346]
 
-    public String generateToken(Authentication authentication, Long userId, String email, String role) {
+    
+    private static final String SECRET =
+            "my-super-secret-key-12345678901234567890";
+    private static final long EXPIRATION_MS =
+            60 * 60 * 1000; // 1 hour
+
+    public String generateToken(String email, String role) {
+
         return Jwts.builder()
                 .setSubject(email)
-                .claim("userId", userId)
                 .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + validityInMs))
-                .signWith(key)
-                .compact(); // [cite: 348-349]
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
+                .signWith(SignatureAlgorithm.HS256, SECRET)
+                .compact();
+    }
+
+    public String getUsernameFromToken(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    public String getRoleFromToken(String token) {
+        return (String) getClaims(token).get("role");
     }
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-            return true; // [cite: 350]
-        } catch (JwtException | IllegalArgumentException e) {
-            return false; // Rejects "mock-token" [cite: 367]
+            getClaims(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException ex) {
+            return false;
         }
     }
 
-    public String getEmailFromToken(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build()
-                .parseClaimsJws(token).getBody().getSubject(); // [cite: 351]
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(SECRET)
+                .parseClaimsJws(token)
+                .getBody();
     }
 }
