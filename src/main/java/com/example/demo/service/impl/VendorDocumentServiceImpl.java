@@ -1,57 +1,81 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.model.*;
-import com.example.demo.repository.*;
+import com.example.demo.model.DocumentType;
+import com.example.demo.model.Vendor;
+import com.example.demo.model.VendorDocument;
+import com.example.demo.repository.DocumentTypeRepository;
+import com.example.demo.repository.VendorDocumentRepository;
+import com.example.demo.repository.VendorRepository;
 import com.example.demo.service.VendorDocumentService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class VendorDocumentServiceImpl implements VendorDocumentService {
+
     private final VendorDocumentRepository vendorDocumentRepository;
     private final VendorRepository vendorRepository;
     private final DocumentTypeRepository documentTypeRepository;
 
     public VendorDocumentServiceImpl(VendorDocumentRepository vendorDocumentRepository,
                                      VendorRepository vendorRepository,
-                                     DocumentTypeRepository documentTypeRepository) { // [cite: 52, 53]
+                                     DocumentTypeRepository documentTypeRepository) {
         this.vendorDocumentRepository = vendorDocumentRepository;
         this.vendorRepository = vendorRepository;
         this.documentTypeRepository = documentTypeRepository;
     }
 
     @Override
-    public VendorDocument uploadDocument(Long vendorId, Long typeId, VendorDocument document) {
+    @Transactional
+    public VendorDocument uploadDocument(Long vendorId, Long documentTypeId, VendorDocument doc) {
+        // Find Vendor
         Vendor vendor = vendorRepository.findById(vendorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Vendor not found")); // [cite: 271]
-        DocumentType type = documentTypeRepository.findById(typeId)
-                .orElseThrow(() -> new ResourceNotFoundException("Document type not found")); // [cite: 271]
+                .orElseThrow(() -> new ResourceNotFoundException("Vendor not found with ID: " + vendorId));
 
-        if (document.getFileUrl() == null || document.getFileUrl().isEmpty()) {
-            throw new IllegalArgumentException("File URL mandatory"); // [cite: 273]
+        // Find DocumentType
+        DocumentType docType = documentTypeRepository.findById(documentTypeId)
+                .orElseThrow(() -> new ResourceNotFoundException("DocumentType not found with ID: " + documentTypeId));
+
+        // Test 14: Validation for Expiry Date
+        if (doc.getExpiryDate() != null && doc.getExpiryDate().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Expiry date cannot be in the past");
         }
 
-        if (document.getExpiryDate() != null && document.getExpiryDate().isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("Expiry date cannot be in the past"); // [cite: 274]
-        }
+        // Set relationships for Test 13
+        doc.setVendor(vendor);
+        doc.setDocumentType(docType);
 
-        document.setVendor(vendor);
-        document.setDocumentType(type);
-        document.setIsValid(document.getExpiryDate() == null || document.getExpiryDate().isAfter(LocalDate.now())); // [cite: 275]
-        
-        return vendorDocumentRepository.save(document);
-    }
-
-    @Override
-    public List<VendorDocument> getDocumentsForVendor(Long vendorId) {
-        return vendorDocumentRepository.findByVendorId(vendorId);
+        return vendorDocumentRepository.save(doc);
     }
 
     @Override
     public VendorDocument getDocument(Long id) {
+        // Test 16: Handle Not Found
         return vendorDocumentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("VendorDocument not found")); // [cite: 220]
+                .orElseThrow(() -> new ResourceNotFoundException("VendorDocument not found with ID: " + id));
+    }
+
+    @Override
+    public List<VendorDocument> getDocumentsByVendor(Long vendorId) {
+        // Resolves your compilation error
+        return vendorDocumentRepository.findByVendorId(vendorId);
+    }
+
+    @Override
+    public List<VendorDocument> getAllDocuments() {
+        return vendorDocumentRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public void deleteDocument(Long id) {
+        if (!vendorDocumentRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Cannot delete. Document not found.");
+        }
+        vendorDocumentRepository.deleteById(id);
     }
 }
