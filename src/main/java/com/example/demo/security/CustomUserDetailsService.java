@@ -20,13 +20,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
 
-        // CRITICAL: Database role "USER" must become "ROLE_USER" for authorization to pass
-        String roleWithPrefix = "ROLE_" + user.getRole().toUpperCase();
+        // CRITICAL: Database role "USER" must be mapped to "ROLE_USER"
+        String mappedRole = "ROLE_" + user.getRole().toUpperCase();
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(roleWithPrefix))
+                Collections.singletonList(new SimpleGrantedAuthority(mappedRole))
         );
     }
 }

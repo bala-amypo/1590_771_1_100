@@ -25,8 +25,9 @@ import java.util.Arrays;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity // Enables @PreAuthorize support if used in controllers
+@EnableMethodSecurity // Required if using @PreAuthorize in controllers
 public class SecurityConfig {
+
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
 
@@ -36,31 +37,31 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() { 
-        return new BCryptPasswordEncoder(); 
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(); //
     }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService); 
-        authProvider.setPasswordEncoder(passwordEncoder()); 
+        authProvider.setUserDetailsService(userDetailsService); //
+        authProvider.setPasswordEncoder(passwordEncoder()); //
         return authProvider;
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration auth) throws Exception {
-        return auth.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager(); //
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(Customizer.withDefaults())
-            .csrf(csrf -> csrf.disable()) // Stateless APIs don't need CSRF
-            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) 
+            .cors(Customizer.withDefaults()) // Fixes potential CORS 403s
+            .csrf(csrf -> csrf.disable()) // Required for stateless JWT APIs
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //
             .authorizeHttpRequests(auth -> auth
-                // Allow all Swagger, Auth, and Health endpoints
+                // Publicly accessible endpoints
                 .requestMatchers(
                     "/auth/**", 
                     "/health", 
@@ -69,15 +70,13 @@ public class SecurityConfig {
                     "/swagger-ui.html",
                     "/webjars/**"
                 ).permitAll()
-                // All other API requests require authentication
-                .requestMatchers("/api/**").authenticated() 
+                // All other /api requests require valid authentication
+                .requestMatchers("/api/**").authenticated()
                 .anyRequest().authenticated()
             );
 
-        // Link the custom provider
+        // Configure the provider and the filter
         http.authenticationProvider(authenticationProvider());
-
-        // Place JWT Filter before the standard UsernamePassword filter
         http.addFilterBefore(new JwtAuthenticationFilter(jwtUtil, userDetailsService), 
                              UsernamePasswordAuthenticationFilter.class);
 
@@ -86,15 +85,14 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        // Use setAllowedOriginPatterns for better security with wildcards
-        configuration.setAllowedOriginPatterns(Arrays.asList("*")); 
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept"));
-        configuration.setAllowCredentials(true);
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(Arrays.asList("*")); //
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
+        config.setAllowCredentials(true);
         
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", config);
         return source;
     }
 }
