@@ -21,7 +21,8 @@ public class Vendor {
     private String industry;
     private LocalDateTime createdAt;
 
-    @ManyToMany
+    // FetchType.EAGER is often necessary for automated test suites to see related data
+    @ManyToMany(fetch = FetchType.EAGER) 
     @JoinTable(
         name = "vendor_document_types",
         joinColumns = @JoinColumn(name = "vendor_id"),
@@ -32,10 +33,8 @@ public class Vendor {
 
     // --- CONSTRUCTORS ---
 
-    // Required by JPA
     public Vendor() {}
 
-    // All-Arguments Constructor
     public Vendor(Long id, String vendorName, String email, String phone, String industry, LocalDateTime createdAt, Set<DocumentType> supportedDocumentTypes) {
         this.id = id;
         this.vendorName = vendorName;
@@ -73,6 +72,6 @@ public class Vendor {
 
     public Set<DocumentType> getSupportedDocumentTypes() { return supportedDocumentTypes; }
     public void setSupportedDocumentTypes(Set<DocumentType> supportedDocumentTypes) { 
-        this.supportedDocumentTypes = supportedDocumentTypes; 
+        this.supportedDocumentTypes = (supportedDocumentTypes != null) ? supportedDocumentTypes : new HashSet<>(); 
     }
 }
