@@ -1,29 +1,40 @@
 package com.example.demo.dto;
 
+import java.time.LocalDateTime;
+
 public class VendorScoreResponse {
-
     private Long vendorId;
-    private Double score;
-    private String rating;
+    private String vendorName;
+    private Double scoreValue; // Percentage between 0 and 100 [cite: 163]
+    private String rating; // EXCELLENT, GOOD, POOR, or NONCOMPLIANT [cite: 166]
+    private LocalDateTime lastEvaluated;
 
-    public VendorScoreResponse() {
-    }
+    public VendorScoreResponse() {}
 
-    public VendorScoreResponse(Long vendorId, Double score, String rating) {
+    /**
+     * All-arguments constructor often used in service mapping.
+     */
+    public VendorScoreResponse(Long vendorId, String vendorName, Double scoreValue, String rating, LocalDateTime lastEvaluated) {
         this.vendorId = vendorId;
-        this.score = score;
+        this.vendorName = vendorName;
+        this.scoreValue = scoreValue;
         this.rating = rating;
+        this.lastEvaluated = lastEvaluated;
     }
 
-    public Long getVendorId() {
-        return vendorId;
-    }
+    // Getters and Setters
+    public Long getVendorId() { return vendorId; }
+    public void setVendorId(Long vendorId) { this.vendorId = vendorId; }
 
-    public Double getScore() {
-        return score;
-    }
+    public String getVendorName() { return vendorName; }
+    public void setVendorName(String vendorName) { this.vendorName = vendorName; }
 
-    public String getRating() {
-        return rating;
-    }
+    public Double getScoreValue() { return scoreValue; }
+    public void setScoreValue(Double scoreValue) { this.scoreValue = scoreValue; }
+
+    public String getRating() { return rating; }
+    public void setRating(String rating) { this.rating = rating; }
+
+    public LocalDateTime getLastEvaluated() { return lastEvaluated; }
+    public void setLastEvaluated(LocalDateTime lastEvaluated) { this.lastEvaluated = lastEvaluated; }
 }
