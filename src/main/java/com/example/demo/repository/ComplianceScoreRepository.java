@@ -7,9 +7,7 @@ import java.util.Optional;
 
 @Repository
 public interface ComplianceScoreRepository extends JpaRepository<ComplianceScore, Long> {
-    // The test suite specifically calls this method name
-    Optional<ComplianceScore> findByVendor_Id(Long vendorId); 
-    
-    // Also keep this for your internal service logic
-    Optional<ComplianceScore> findByVendorId(Long vendorId); 
+    // This underscore naming is a JPA convention for nested properties (Vendor's ID)
+    // required specifically by the provided test suite
+    Optional<ComplianceScore> findByVendor_Id(Long vendorId);
 }
