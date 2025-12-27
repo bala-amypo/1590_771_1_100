@@ -7,7 +7,8 @@ import com.example.demo.repository.*;
 import com.example.demo.service.ComplianceScoreService;
 import com.example.demo.util.ComplianceScoringEngine;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional; // Added for data consistency
+import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,23 +33,27 @@ public class ComplianceScoreServiceImpl implements ComplianceScoreService {
     @Override
     @Transactional
     public ComplianceScore evaluateVendor(Long vendorId) {
-        // 1. Verify vendor exists
+        // Find vendor or throw exception to satisfy test requirements
         Vendor vendor = vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vendor not found with ID: " + vendorId));
         
-        // 2. Fetch required document types and uploaded documents
+        // Fetch document types marked as required and vendor's uploaded documents
         List<DocumentType> requiredTypes = documentTypeRepository.findByRequiredTrue();
         List<VendorDocument> docs = vendorDocumentRepository.findByVendor(vendor);
 
-        // 3. Calculate score using the engine
+        // Calculate score using the logic engine
         double scoreVal = scoringEngine.calculateScore(requiredTypes, docs);
-        if (scoreVal < 0) throw new ValidationException("Compliance score cannot be negative");
+        
+        // Basic validation check
+        if (scoreVal < 0) {
+            throw new ValidationException("Compliance score cannot be negative");
+        }
 
-        // 4. Retrieve existing score or create new using the method required by the test suite
+        // Must use findByVendor_Id to match the symbol expected by the test suite
         ComplianceScore score = complianceScoreRepository.findByVendor_Id(vendorId)
                 .orElse(new ComplianceScore());
         
-        // 5. Update score attributes
+        // Update score metadata
         score.setVendor(vendor);
         score.setScoreValue(scoreVal);
         score.setRating(scoringEngine.deriveRating(scoreVal));
@@ -59,13 +64,13 @@ public class ComplianceScoreServiceImpl implements ComplianceScoreService {
 
     @Override
     public ComplianceScore getScore(Long vendorId) {
-        // Uses the underscore naming convention to stay consistent with the test suite
+        // Use findByVendor_Id for consistency with the test suite expectations
         return complianceScoreRepository.findByVendor_Id(vendorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Compliance score not found for vendor: " + vendorId));
+                .orElseThrow(() -> new ResourceNotFoundException("Score not found for vendor ID: " + vendorId));
     }
 
     @Override
-    public List<ComplianceScore> getAllScores() { 
-        return complianceScoreRepository.findAll(); 
+    public List<ComplianceScore> getAllScores() {
+        return complianceScoreRepository.findAll();
     }
 }
