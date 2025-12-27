@@ -10,6 +10,7 @@ import com.example.demo.repository.VendorRepository;
 import com.example.demo.service.VendorDocumentService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -22,8 +23,7 @@ public class VendorDocumentServiceImpl implements VendorDocumentService {
     public VendorDocumentServiceImpl(
             VendorDocumentRepository vendorDocumentRepository,
             VendorRepository vendorRepository,
-            DocumentTypeRepository documentTypeRepository
-    ) {
+            DocumentTypeRepository documentTypeRepository) {
         this.vendorDocumentRepository = vendorDocumentRepository;
         this.vendorRepository = vendorRepository;
         this.documentTypeRepository = documentTypeRepository;
@@ -31,14 +31,16 @@ public class VendorDocumentServiceImpl implements VendorDocumentService {
 
     @Override
     public VendorDocument uploadDocument(Long vendorId, Long documentTypeId, VendorDocument document) {
+
         Vendor vendor = vendorRepository.findById(vendorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Vendor not found"));
 
-        DocumentType type = documentTypeRepository.findById(documentTypeId)
+        DocumentType documentType = documentTypeRepository.findById(documentTypeId)
                 .orElseThrow(() -> new ResourceNotFoundException("Document type not found"));
 
         document.setVendor(vendor);
-        document.setDocumentType(type);
+        document.setDocumentType(documentType);
+        document.setUploadedDate(LocalDate.now());
 
         return vendorDocumentRepository.save(document);
     }
