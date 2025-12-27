@@ -6,20 +6,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/health") // 
-public class HealthServlet extends HttpServlet { // [cite: 377, 378]
-
-    // Public no-arg constructor 
-    public HealthServlet() {
-        super();
-    }
-
-    // Protected doGet method as required 
+@WebServlet("/health")
+public class HealthServlet extends HttpServlet {
+    public HealthServlet() {}
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.setStatus(200);
         resp.getWriter().write("UP");
     }
-    
-    // Ensure no fields are declared here to pass priority test #7 
 }

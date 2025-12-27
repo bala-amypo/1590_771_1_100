@@ -16,20 +16,19 @@ public class VendorDocumentController {
     }
 
     @PostMapping
-    public ResponseEntity<VendorDocument> uploadDocument(
-            @RequestParam Long vendorId, 
-            @RequestParam Long typeId, 
-            @RequestBody VendorDocument document) {
-        return ResponseEntity.ok(vendorDocumentService.uploadDocument(vendorId, typeId, document));
+    public ResponseEntity<VendorDocument> uploadDocument(@RequestParam Long vendorId, 
+                                                        @RequestParam Long typeId, 
+                                                        @RequestBody VendorDocument doc) {
+        return ResponseEntity.ok(vendorDocumentService.uploadDocument(vendorId, typeId, doc));
     }
 
     @GetMapping("/vendor/{vendorId}")
-    public ResponseEntity<List<VendorDocument>> getDocumentsByVendor(@PathVariable Long vendorId) {
+    public ResponseEntity<List<VendorDocument>> getByVendor(@PathVariable Long vendorId) {
         return ResponseEntity.ok(vendorDocumentService.getDocumentsForVendor(vendorId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VendorDocument> getDocument(@PathVariable Long id) {
+    public ResponseEntity<VendorDocument> getById(@PathVariable Long id) {
         return ResponseEntity.ok(vendorDocumentService.getDocument(id));
     }
 }

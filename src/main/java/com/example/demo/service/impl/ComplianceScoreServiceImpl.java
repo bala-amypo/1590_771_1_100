@@ -21,7 +21,7 @@ public class ComplianceScoreServiceImpl implements ComplianceScoreService {
     public ComplianceScoreServiceImpl(VendorRepository vendorRepository,
                                       DocumentTypeRepository documentTypeRepository,
                                       VendorDocumentRepository vendorDocumentRepository,
-                                      ComplianceScoreRepository complianceScoreRepository) { // [cite: 55, 56, 57, 58]
+                                      ComplianceScoreRepository complianceScoreRepository) {
         this.vendorRepository = vendorRepository;
         this.documentTypeRepository = documentTypeRepository;
         this.vendorDocumentRepository = vendorDocumentRepository;
@@ -31,23 +31,21 @@ public class ComplianceScoreServiceImpl implements ComplianceScoreService {
     @Override
     public ComplianceScore evaluateVendor(Long vendorId) {
         Vendor vendor = vendorRepository.findById(vendorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Vendor not found")); // [cite: 295]
-
-        List<DocumentType> requiredTypes = documentTypeRepository.findByRequiredTrue(); // [cite: 297]
+                .orElseThrow(() -> new ResourceNotFoundException("Vendor not found"));
+        
+        List<DocumentType> requiredTypes = documentTypeRepository.findByRequiredTrue();
         List<VendorDocument> docs = vendorDocumentRepository.findByVendor(vendor);
 
         double scoreVal = scoringEngine.calculateScore(requiredTypes, docs);
-        if (scoreVal < 0) {
-            throw new ValidationException("Compliance score cannot be negative"); // [cite: 230, 299]
-        }
+        if (scoreVal < 0) throw new ValidationException("Compliance score cannot be negative");
 
         ComplianceScore score = complianceScoreRepository.findByVendorId(vendorId)
                 .orElse(new ComplianceScore());
         
         score.setVendor(vendor);
         score.setScoreValue(scoreVal);
-        score.setRating(scoringEngine.deriveRating(scoreVal)); // [cite: 172, 300]
-        score.setLastEvaluated(LocalDateTime.now()); // [cite: 300]
+        score.setRating(scoringEngine.deriveRating(scoreVal));
+        score.setLastEvaluated(LocalDateTime.now());
 
         return complianceScoreRepository.save(score);
     }
@@ -55,11 +53,9 @@ public class ComplianceScoreServiceImpl implements ComplianceScoreService {
     @Override
     public ComplianceScore getScore(Long vendorId) {
         return complianceScoreRepository.findByVendorId(vendorId)
-                .orElseThrow(() -> new ResourceNotFoundException("Score not found")); // [cite: 220]
+                .orElseThrow(() -> new ResourceNotFoundException("Score not found"));
     }
 
     @Override
-    public List<ComplianceScore> getAllScores() {
-        return complianceScoreRepository.findAll();
-    }
+    public List<ComplianceScore> getAllScores() { return complianceScoreRepository.findAll(); }
 }

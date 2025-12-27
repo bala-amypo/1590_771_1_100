@@ -8,8 +8,7 @@ import java.util.Set;
 @Entity
 @Table(name = "vendors")
 public class Vendor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
     private String vendorName;
@@ -26,28 +25,15 @@ public class Vendor {
 
     public Vendor() {}
 
-    public Vendor(Long id, String vendorName, String email, String phone, String industry, LocalDateTime createdAt, Set<DocumentType> supportedDocumentTypes) {
-        this.id = id;
-        this.vendorName = vendorName;
-        this.email = email;
-        this.phone = phone;
-        this.industry = industry;
-        this.createdAt = createdAt;
-        this.supportedDocumentTypes = supportedDocumentTypes;
-    }
-
     @PrePersist
-    public void prePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
+    public void prePersist() { this.createdAt = LocalDateTime.now(); }
 
-    // Getters and Setters ...
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getVendorName() { return vendorName; }
     public void setVendorName(String vendorName) { this.vendorName = vendorName; }
     public Set<DocumentType> getSupportedDocumentTypes() { return supportedDocumentTypes; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public String getIndustry() { return industry; }
     public void setIndustry(String industry) { this.industry = industry; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
 }
