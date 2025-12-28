@@ -1,52 +1,34 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "document_types")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DocumentType {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
     @Column(unique = true)
     private String typeName;
     private String description;
     private Boolean required;
     private Integer weight;
     private LocalDateTime createdAt;
-
+    
     @ManyToMany(mappedBy = "supportedDocumentTypes")
     private Set<Vendor> vendors = new HashSet<>();
 
-    public DocumentType() {}
-
-    public DocumentType(Long id, String typeName, String description, Boolean required, Integer weight, LocalDateTime createdAt, Set<Vendor> vendors) {
-        this.id = id;
-        this.typeName = typeName;
-        this.description = description;
-        this.required = required;
-        this.weight = weight;
-        this.createdAt = createdAt;
-        this.vendors = vendors;
-    }
-
     @PrePersist
     public void prePersist() {
-        this.createdAt = LocalDateTime.now();
+        if(createdAt == null) createdAt = LocalDateTime.now();
+        if(weight == null) weight = 0;
     }
-
-    // Getters and Setters ...
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
-    public String getTypeName() { return typeName; }
-    public void setTypeName(String typeName) { this.typeName = typeName; }
-    public Boolean getRequired() { return required; }
-    public void setRequired(Boolean required) { this.required = required; }
-    public Integer getWeight() { return weight; }
-    public void setWeight(Integer weight) { this.weight = weight; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public Set<Vendor> getVendors() { return vendors; }
 }
