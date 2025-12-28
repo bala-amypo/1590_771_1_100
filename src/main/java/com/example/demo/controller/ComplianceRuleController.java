@@ -2,34 +2,28 @@ package com.example.demo.controller;
 
 import com.example.demo.model.ComplianceRule;
 import com.example.demo.service.ComplianceRuleService;
-import org.springframework.http.ResponseEntity;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/compliance-rules")
+@RequiredArgsConstructor
 public class ComplianceRuleController {
-
     private final ComplianceRuleService complianceRuleService;
 
-    // Constructor injection as required by project rules [cite: 9]
-    public ComplianceRuleController(ComplianceRuleService complianceRuleService) {
-        this.complianceRuleService = complianceRuleService;
-    }
-
     @PostMapping
-    public ResponseEntity<ComplianceRule> createRule(@RequestBody ComplianceRule rule) {
-        return ResponseEntity.ok(complianceRuleService.createRule(rule));
+    public ComplianceRule createRule(@RequestBody ComplianceRule rule) {
+        return complianceRuleService.createRule(rule);
     }
 
     @GetMapping
-    public ResponseEntity<List<ComplianceRule>> getAllRules() {
-        return ResponseEntity.ok(complianceRuleService.getAllRules());
+    public List<ComplianceRule> getAllRules() {
+        return complianceRuleService.getAllRules();
     }
-
+    
     @GetMapping("/{id}")
-    public ResponseEntity<ComplianceRule> getRule(@PathVariable Long id) {
-        return ResponseEntity.ok(complianceRuleService.getRule(id));
+    public ComplianceRule getRule(@PathVariable Long id) {
+        return complianceRuleService.getRule(id);
     }
 }
