@@ -8,7 +8,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "document_types")
-@Data
+@Getter // Replaces @Data
+@Setter // Replaces @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,6 +25,8 @@ public class DocumentType {
     private LocalDateTime createdAt;
     
     @ManyToMany(mappedBy = "supportedDocumentTypes")
+    // Exclude from ToString to prevent infinite recursion loop
+    @ToString.Exclude 
     private Set<Vendor> vendors = new HashSet<>();
 
     @PrePersist

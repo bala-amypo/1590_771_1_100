@@ -1,6 +1,6 @@
 package com.example.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty; // Import this
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -9,7 +9,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "vendors")
-@Data
+@Getter // Replaces @Data
+@Setter // Replaces @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,8 +25,6 @@ public class Vendor {
     private String industry;
     private LocalDateTime createdAt;
     
-    // --- THE FIX IS HERE ---
-    // This tells Swagger: "Don't ask for this in the POST request"
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -33,6 +32,8 @@ public class Vendor {
         joinColumns = @JoinColumn(name = "vendor_id"),
         inverseJoinColumns = @JoinColumn(name = "type_id")
     )
+    // Exclude from ToString to prevent infinite recursion loop
+    @ToString.Exclude 
     private Set<DocumentType> supportedDocumentTypes = new HashSet<>();
 
     @PrePersist
