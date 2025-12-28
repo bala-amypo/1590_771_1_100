@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty; // Import this
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -23,6 +24,9 @@ public class Vendor {
     private String industry;
     private LocalDateTime createdAt;
     
+    // --- THE FIX IS HERE ---
+    // This tells Swagger: "Don't ask for this in the POST request"
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "vendor_document_types",
