@@ -1,5 +1,4 @@
 package com.example.demo.service;
-
 import com.example.demo.model.ComplianceRule;
 import java.util.List;
 
