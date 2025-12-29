@@ -5,15 +5,13 @@ import java.time.LocalDateTime;
 public class VendorScoreResponse {
     private Long vendorId;
     private String vendorName;
-    private Double scoreValue; // Percentage between 0 and 100 [cite: 163]
-    private String rating; // EXCELLENT, GOOD, POOR, or NONCOMPLIANT [cite: 166]
+    private Double scoreValue; 
+    private String rating; 
     private LocalDateTime lastEvaluated;
 
     public VendorScoreResponse() {}
 
-    /**
-     * All-arguments constructor often used in service mapping.
-     */
+    
     public VendorScoreResponse(Long vendorId, String vendorName, Double scoreValue, String rating, LocalDateTime lastEvaluated) {
         this.vendorId = vendorId;
         this.vendorName = vendorName;
@@ -22,7 +20,7 @@ public class VendorScoreResponse {
         this.lastEvaluated = lastEvaluated;
     }
 
-    // Getters and Setters
+    
     public Long getVendorId() { return vendorId; }
     public void setVendorId(Long vendorId) { this.vendorId = vendorId; }
 
