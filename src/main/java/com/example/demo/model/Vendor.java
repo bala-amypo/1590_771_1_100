@@ -9,8 +9,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "vendors")
-@Getter // Replaces @Data
-@Setter // Replaces @Data
+@Getter 
+@Setter 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
