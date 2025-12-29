@@ -29,6 +29,6 @@ public class VendorDocument {
     @PrePersist
     public void prePersist() {
         if(uploadedAt == null) uploadedAt = LocalDateTime.now();
-        // Validation logic for isValid can also be here, but service usually handles business logic
+        
     }
 }
