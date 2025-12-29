@@ -32,7 +32,7 @@ public class Vendor {
         joinColumns = @JoinColumn(name = "vendor_id"),
         inverseJoinColumns = @JoinColumn(name = "type_id")
     )
-    // Exclude from ToString to prevent infinite recursion loop
+    
     @ToString.Exclude 
     private Set<DocumentType> supportedDocumentTypes = new HashSet<>();
 
