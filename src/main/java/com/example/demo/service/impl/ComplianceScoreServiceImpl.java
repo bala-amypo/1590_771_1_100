@@ -19,8 +19,7 @@ public class ComplianceScoreServiceImpl implements ComplianceScoreService {
     private final VendorDocumentRepository vendorDocumentRepository;
     private final ComplianceScoreRepository complianceScoreRepository;
     
-    // Engine can be instantiated here or injected if made a Bean. 
-    // Tests instantiate Service manually, so we use `new` internally or via field.
+    
     private final ComplianceScoringEngine engine = new ComplianceScoringEngine();
 
     @Override

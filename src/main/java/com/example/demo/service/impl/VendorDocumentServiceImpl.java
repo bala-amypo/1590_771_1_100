@@ -29,7 +29,7 @@ public class VendorDocumentServiceImpl implements VendorDocumentService {
 
         document.setVendor(v);
         document.setDocumentType(dt);
-        // Default validation logic: valid if expiry is null or future
+        
         document.setIsValid(true); 
         return vendorDocumentRepository.save(document);
     }
